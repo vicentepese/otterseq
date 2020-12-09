@@ -1,0 +1,14 @@
+{
+
+    "directory":{
+        "Data":"Data/",
+        "GWAS":"Data/GWAS/",
+        "GWAS_binaries":"Data/GWAS_binaries/",
+        "sh_scripts":"sh_scripts/"
+    },
+
+    "sh_script":{
+        "binarize.sh":"sh_scripts/binarize.sh"
+    }
+
+}
