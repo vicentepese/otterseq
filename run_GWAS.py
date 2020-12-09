@@ -50,7 +50,7 @@ def get_SNP(settings, path):
             outFile.write(snp + '\n')
 
     # Print 
-    print("Common SNPs stored in " + settings['file']['commonSNPS.txt'])
+    print("Common SNPs stored in " + settings['file']['commonSNPs.txt'])
 
 def mergeFiles(settings):
     # Creates a merge file and uses it to merge files in GWAS_binaries
@@ -81,7 +81,7 @@ def main():
     settings["directory"]["main"] = os.getcwd()
 
     # Binarize GWAS files
-    if (os.listdir(settings['directory']['GWAS_binaries'])):
+    if (not os.listdir(settings['directory']['GWAS_binaries'])):
         binarizeFiles(settings)
     else:
         print("Files already binarized")
