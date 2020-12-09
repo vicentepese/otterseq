@@ -11,7 +11,7 @@
 
     "file":{
         "commonSNPs.txt":"Resources/commonSNPs.txt",
-        "mergeList.txt":"Resources/mergeList.txt"
+        "mergeList":"Resources/mergeList.txt"
     },
 
     "plinkFiles":{
