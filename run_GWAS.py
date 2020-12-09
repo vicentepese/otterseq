@@ -19,6 +19,8 @@ def binarizeFiles(settings):
 
 def get_SNP(settings, path):
 
+    print("Parsing common SNPs")
+
     # Get .bim files of controls
     files = [file for file in os.listdir(path) if isfile(join(path, file)) and '.bim' in file]
 
@@ -46,6 +48,9 @@ def get_SNP(settings, path):
     with open(settings['file']['commonSNPs.txt'], 'w') as outFile:
         for snp in commonSNPs:
             outFile.write(snp + '\n')
+
+    # Print 
+    print("Common SNPs stored in " + settings['file']['commonSNPS.txt'])
 
 def mergeFiles(settings):
     # Creates a merge file and uses it to merge files in GWAS_binaries
