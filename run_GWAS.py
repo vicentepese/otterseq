@@ -27,10 +27,13 @@ def main():
     settings["directory"]["main"] = os.getcwd()
 
     # Binarize GWAS files
-    if (os.listdir(settings['directory']['GWAS'])):
+    if (os.listdir(settings['directory']['GWAS_binaries'])):
         binarizeFiles(settings)
     else:
         print("Files already binarized")
+
+    # 
+
 
     
 
