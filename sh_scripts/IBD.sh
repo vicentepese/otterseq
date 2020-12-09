@@ -1,8 +1,8 @@
 #!/bin/bash
 
 # Get directories
-GWASDATA=$(jq -r .plinkFikes.GWAS)
-IBDGEN=$(jq -r .files.IBDGenome)
+GWASDATA=$(jq -r .plinkFiles.GWAS settings.json)
+IBDGEN=$(jq -r .file.IBDGenome settings.json)
 
 king -b $GWASDATA.bed --ibd
 mv king.seg $IBDGEN

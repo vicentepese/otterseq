@@ -114,7 +114,6 @@ def IBDfilt(settings):
     subprocess.call(['bash',settings['sh_script']['IBD.sh']])
     print("IBD successfully computed")
 
-
     # Get list of patients to be removed 
     IBD_IDs = list()
     with open(settings['file']['IBD'], 'r') as inFile:
@@ -125,44 +124,39 @@ def IBDfilt(settings):
             PI_hat = row[8]
             if float(PI_hat) > settings['IBD_threshold']:
                 IBD_IDs.append(row[0])
-
-    # Input genotypes
-    f = settings['plinkFiles']['GWAS']
-    sep = '\t'
-    addPhenotype(settings, f, sep)           
-
+       
     # Get list of patients and cases 
-    dataset = list()
-    with open('./Data/modLGI1.fam','r') as inFile:
-        for row in inFile:
-            row = row.split('\t')
-            if int(row[5].split('\n')[0]) != -9:
-                dataset.append(row[0])
+    # patientList = list()
+    # with open(settings['plinkFiles']['GWAS'] + '.fam','r') as inFile:
+    #     for row in inFile:
+    #         row = row.split('\t')
+    #         if int(row[5].split('\n')[0]) != -9:
+    #             patientList.append(row[0])
     
-    # Get list of IBDS patient/cases
-    high_IBD = [ID for ID in np.unique(IBD_IDs) if ID in dataset]
+    # # Get list of IBDS patient/cases
+    # high_IBD = [ID for ID in np.unique(IBD_IDs) if ID in patientList]
 
-    # Load controls and cases
-    controls = list() ; cases = list()
-    with open(settings['file']['GWASIDsControls'], 'r') as inFile:
-        for row in inFile: controls.append(row.split('\"')[1])
-    with open(settings['file']['GWASIDsCases'], 'r') as inFile: 
-        for row in inFile: cases.append(row.split('\"')[1])
+    # # Load controls and cases
+    # controls = list() ; cases = list()
+    # with open(settings['file']['GWASIDsControls'], 'r') as inFile:
+    #     for row in inFile: controls.append(row.split('\"')[1])
+    # with open(settings['file']['GWASIDsCases'], 'r') as inFile: 
+    #     for row in inFile: cases.append(row.split('\"')[1])
     
-    # Check number of cases and controls
-    case_count = 0 ; control_count = 0 
-    for ID in high_IBD:
-        if ID.split('_')[-1].split('.')[0] in cases:
-            case_count +=1
-        elif ID.split('_')[-1].split('.')[0] in controls:
-            control_count += 1
-    print('Number of cases to be excluded: ' + str(case_count))
-    print('Number of controls to be excluded: ' + str(control_count))
+    # # Check number of cases and controls
+    # case_count = 0 ; control_count = 0 
+    # for ID in high_IBD:
+    #     if ID.split('_')[-1].split('.')[0] in cases:
+    #         case_count +=1
+    #     elif ID.split('_')[-1].split('.')[0] in controls:
+    #         control_count += 1
+    # print('Number of cases to be excluded: ' + str(case_count))
+    # print('Number of controls to be excluded: ' + str(control_count))
 
-    # Create exclusion file 
-    with open(settings['file']['excludeID.txt'], 'w') as outFile:
-        for ID in high_IBD: 
-            outFile.write(ID + ' ' + ID + ' ' + '\n')
+    # # Create exclusion file 
+    # with open(settings['file']['excludeID.txt'], 'w') as outFile:
+    #     for ID in high_IBD: 
+    #         outFile.write(ID + ' ' + ID + ' ' + '\n')
 
 
 def main():
@@ -185,6 +179,9 @@ def main():
 
     # Merge files
     mergeFiles(settings)
+
+    # Filter IBD
+    IBDfilt(settings)
 
 
     
