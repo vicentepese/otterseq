@@ -23,15 +23,32 @@ if [[ $DBCOUNT -gt 1 ]] ; then
 fi 
 
 # For each file, binarize
-for file in ${GWASFILES[@]} ; do
-    if [[ $file == *'.ped'* ]] ; then
-        echo "Converting $file to binary"
-        IFS='.' read -a strarr <<< "$file"
-        plink --file ${GWASDIR}${strarr[0]} --no-sex --no-pheno --no-fid --no-parents \
-            --noweb --make-bed --out ${GWASBINDIR}${strarr[0]} >> ${GWASBINDIR}${strarr[0]}.log
-        mv ${GWASBINDIR}${strarr[0]}.log ${GWASBINDIR}Log/${strarr[0]}.log
-    fi  
-done 
+if [[ $DBCOUNT -gt 1 ]] ; then 
+    DBLIST=$(ls $GWASDIR* -d)
+    for DB in ${DBLIST[@]} ; do 
+        echo "Binarizing files in "$DB
+        GWASFILES=$(ls $DB)
+        for file in ${GWASFILES[@]} ; do
+            if [[ $file == *'.ped'* ]] ; then
+                echo "Converting $file to binary"
+                IFS='.' read -a strarr <<< "$file"
+                plink --file ${DB}/${strarr[0]} --no-sex --no-pheno --no-fid --no-parents \
+                    --noweb --make-bed --out ${DB}/${strarr[0]} >> ${DB}/${strarr[0]}.log
+            fi  
+        done 
+    done
+else 
+    GWASFILES=$(ls)
+    for file in ${GWASFILES[@]} ; do
+        if [[ $file == *'.ped'* ]] ; then
+                echo "Converting $file to binary"
+                IFS='.' read -a strarr <<< "$file"
+                plink --file ${DB}/${strarr[0]} --no-sex --no-pheno --no-fid --no-parents \
+                    --noweb --make-bed --out ${DB}/${strarr[0]} >> ${DB}/${strarr[0]}.log
+        fi  
+    done 
+fi
+
 
 # Print 
 echo "Files binarized"
