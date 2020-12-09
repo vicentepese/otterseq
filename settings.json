@@ -4,7 +4,13 @@
         "Data":"Data/",
         "GWAS":"Data/GWAS/",
         "GWAS_binaries":"Data/GWAS_binaries/",
-        "sh_scripts":"sh_scripts/"
+        "sh_scripts":"sh_scripts/",
+        "Outputs":"Outputs/",
+        "Resources":"Resources/"
+    },
+
+    "file":{
+        "commonSNPs.txt":"Resources/commonSNPs.txt"
     },
 
     "sh_script":{
