@@ -13,6 +13,7 @@ Required Python modules
 > collections
 > matplotlib v3.0.2
 > scipy v1.2.1
+> king v2.2.4
 
 # Steps / set settings
 

@@ -11,7 +11,8 @@
 
     "file":{
         "commonSNPs.txt":"Resources/commonSNPs.txt",
-        "mergeList":"Resources/mergeList.txt"
+        "mergeList":"Resources/mergeList.txt",
+        "IBDGenome":"Resources/LGI1.genome"
     },
 
     "plinkFiles":{
@@ -20,7 +21,10 @@
 
     "sh_script":{
         "binarize.sh":"sh_scripts/binarize.sh",
-        "mergeFiles.sh":"sh_scripts/mergeFiles.sh"
-    }
+        "mergeFiles.sh":"sh_scripts/mergeFiles.sh",
+        "IBD.sh":"sh_scripts/IBD.sh"
+    },
+
+    "IBD_threshold":0.2
 
 }
