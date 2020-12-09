@@ -10,11 +10,17 @@
     },
 
     "file":{
-        "commonSNPs.txt":"Resources/commonSNPs.txt"
+        "commonSNPs.txt":"Resources/commonSNPs.txt",
+        "mergeList.txt":"Resources/mergeList.txt"
+    },
+
+    "plinkFiles":{
+        "GWAS":"Data/LGI1"
     },
 
     "sh_script":{
-        "binarize.sh":"sh_scripts/binarize.sh"
+        "binarize.sh":"sh_scripts/binarize.sh",
+        "mergeFiles.sh":"sh_scripts/mergeFiles.sh"
     }
 
 }

@@ -47,7 +47,23 @@ def get_SNP(settings, path):
         for snp in commonSNPs:
             outFile.write(snp + '\n')
 
-    return(commonSNPs)
+def mergeFiles(settings):
+    # Creates a merge file and uses it to merge files in GWAS_binaries
+
+    # Get control files
+    filePath = settings['directory']['GWAS_binaries']
+    files = [f for f in os.listdir(filePath) if isfile(join(filePath,f)) and '.bim' in f]
+    files = [f.split('.')[0] for f in files]
+
+    # Write mergelist
+    with open(settings['file']['mergeList.txt'],'w') as outFile:
+        for f in files:
+            outFile.write(f + '.bed ' + f + '.bim ' + f + '.fam' + '\n')
+
+    # Merge files
+    print('Merging files')
+    subprocess.call(['bash', 'mergeFiles.sh'])
+    print('Files successfully merged')   
 
 
 def main():
@@ -66,7 +82,7 @@ def main():
         print("Files already binarized")
 
     # Get list of common SNPs across files 
-    commonSNPs = get_SNP(settings, path = settings['directory']['GWAS_binaries'])
+    get_SNP(settings, path = settings['directory']['GWAS_binaries'])
 
     # Merge files
     mergeFiles
