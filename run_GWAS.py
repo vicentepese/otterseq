@@ -116,7 +116,7 @@ def IBDfilt(settings):
 
     # Get list of patients to be removed 
     IBD_IDs = list()
-    with open(settings['file']['IBD'], 'r') as inFile:
+    with open(settings['file']['IBDGenome'], 'r') as inFile:
         next(inFile)
         for row in inFile:
             row = row.split('\t')
@@ -126,12 +126,12 @@ def IBDfilt(settings):
                 IBD_IDs.append(row[0])
        
     # Get list of patients and cases 
-    # patientList = list()
-    # with open(settings['plinkFiles']['GWAS'] + '.fam','r') as inFile:
-    #     for row in inFile:
-    #         row = row.split('\t')
-    #         if int(row[5].split('\n')[0]) != -9:
-    #             patientList.append(row[0])
+    patientList = list()
+    with open(settings['plinkFiles']['GWAS'] + '.fam','r') as inFile:
+        for row in inFile:
+            row = row.split('\t')
+            if int(row[5].split('\n')[0]) != -9:
+                patientList.append(row[0])
     
     # # Get list of IBDS patient/cases
     # high_IBD = [ID for ID in np.unique(IBD_IDs) if ID in patientList]
