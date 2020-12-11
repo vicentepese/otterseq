@@ -7,6 +7,8 @@ from collections import defaultdict
 import matplotlib.pyplot as plt
 import scipy 
 from scipy.spatial.distance import euclidean 
+import seaborn as sb
+import pandas as pd
 
 def binarizeFiles(settings):
 
@@ -127,7 +129,6 @@ def IBDfilt(settings):
        
     # Get list of patients and cases (remove unknown pheno)
     patientList = list(); 
-    case_count, control_count = 0, 0
     with open(settings['plinkFiles']['GWAS'] + '.fam','r') as inFile:
         for row in inFile:
             row = row.split('\t')
@@ -150,9 +151,16 @@ def IBDfilt(settings):
     # print('Number of controls to be excluded: ' + str(control_count))
 
     # Create exclusion file 
-    with open(settings['file']['excludeID.txt'], 'w') as outFile:
+    with open(settings['file']['excludeID_IBD'], 'w') as outFile:
         for ID in high_IBD: 
             outFile.write(ID + ' ' + ID + ' ' + '\n')
+
+def computePCA(settings):
+
+    # Compute PCA
+    print("Compute PCA")
+    subprocess.call(['bash', settings['sh_script']['pca.sh']])
+    print("PCA computed. Ploting PCs")
 
 
 def main():
@@ -176,8 +184,11 @@ def main():
     # Merge files
     mergeFiles(settings)
 
-    # Filter IBD
+    # Filter by IBD
     IBDfilt(settings)
+
+    # Compute PCA with QC
+    computePCA(settings)
 
 
     

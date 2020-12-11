@@ -12,19 +12,26 @@
     "file":{
         "commonSNPs.txt":"Resources/commonSNPs.txt",
         "mergeList":"Resources/mergeList.txt",
-        "IBDGenome":"Resources/LGI1.genome"
+        "IBDGenome":"Resources/LGI1.genome",
+        "excludeID_IBD":"Resources/ID_IBD.txt",
+        "PCA_eigenvec":"Resources/PCA.eigenvec"
     },
 
     "plinkFiles":{
-        "GWAS":"Data/LGI1"
+        "GWAS":"Data/LGI1",
+        "PCA":"Resources/PCA"
     },
 
     "sh_script":{
         "binarize.sh":"sh_scripts/binarize.sh",
         "mergeFiles.sh":"sh_scripts/mergeFiles.sh",
-        "IBD.sh":"sh_scripts/IBD.sh"
+        "IBD.sh":"sh_scripts/IBD.sh",
+        "pca.sh":"sh_scripts/pca.sh"
     },
 
-    "IBD_threshold":0.2
+    "IBD_threshold":0.2,
+    "phenomiss":0.1,
+    "genomiss":0.1,
+    "maf":0.05
 
 }
