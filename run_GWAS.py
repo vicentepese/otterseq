@@ -125,38 +125,34 @@ def IBDfilt(settings):
             if float(PI_hat) > settings['IBD_threshold']:
                 IBD_IDs.append(row[0])
        
-    # Get list of patients and cases 
-    patientList = list()
+    # Get list of patients and cases (remove unknown pheno)
+    patientList = list(); 
+    case_count, control_count = 0, 0
     with open(settings['plinkFiles']['GWAS'] + '.fam','r') as inFile:
         for row in inFile:
             row = row.split('\t')
-            if int(row[5].split('\n')[0]) != -9:
+            pheno = int(row[5].split('\n')[0])
+            if pheno != -9:
                 patientList.append(row[0])
     
-    # # Get list of IBDS patient/cases
-    # high_IBD = [ID for ID in np.unique(IBD_IDs) if ID in patientList]
-
-    # # Load controls and cases
-    # controls = list() ; cases = list()
-    # with open(settings['file']['GWASIDsControls'], 'r') as inFile:
-    #     for row in inFile: controls.append(row.split('\"')[1])
-    # with open(settings['file']['GWASIDsCases'], 'r') as inFile: 
-    #     for row in inFile: cases.append(row.split('\"')[1])
+    # Get list of IBDS patient/cases (unknown pheno not included)
+    high_IBD = [ID for ID in np.unique(IBD_IDs) if ID in patientList]
     
     # # Check number of cases and controls
     # case_count = 0 ; control_count = 0 
     # for ID in high_IBD:
-    #     if ID.split('_')[-1].split('.')[0] in cases:
+    #     ID_pre = ID.split('_')[-1].split('.')[0]
+    #     if ID_pre in cases:
     #         case_count +=1
-    #     elif ID.split('_')[-1].split('.')[0] in controls:
+    #     elif ID_pre in controls:
     #         control_count += 1
     # print('Number of cases to be excluded: ' + str(case_count))
     # print('Number of controls to be excluded: ' + str(control_count))
 
-    # # Create exclusion file 
-    # with open(settings['file']['excludeID.txt'], 'w') as outFile:
-    #     for ID in high_IBD: 
-    #         outFile.write(ID + ' ' + ID + ' ' + '\n')
+    # Create exclusion file 
+    with open(settings['file']['excludeID.txt'], 'w') as outFile:
+        for ID in high_IBD: 
+            outFile.write(ID + ' ' + ID + ' ' + '\n')
 
 
 def main():
