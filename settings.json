@@ -10,7 +10,7 @@
     },
 
     "file":{
-        "commonSNPs.txt":"Resources/commonSNPs.txt",
+        "commonSNPs":"Resources/commonSNPs.txt",
         "mergeList":"Resources/mergeList.txt",
         "IBDGenome":"Resources/LGI1.genome",
         "excludeID_IBD":"Resources/ID_IBD.txt",
@@ -26,7 +26,8 @@
         "binarize.sh":"sh_scripts/binarize.sh",
         "mergeFiles.sh":"sh_scripts/mergeFiles.sh",
         "IBD.sh":"sh_scripts/IBD.sh",
-        "pca.sh":"sh_scripts/pca.sh"
+        "pca.sh":"sh_scripts/pca.sh",
+        "qc.sh":"sh_scripts/qc.sh"
     },
 
     "IBD_threshold":0.2,

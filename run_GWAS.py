@@ -7,7 +7,7 @@ from collections import defaultdict
 import matplotlib.pyplot as plt
 import scipy 
 from scipy.spatial.distance import euclidean 
-import seaborn as sb
+import seaborn as sns
 import pandas as pd
 
 def binarizeFiles(settings):
@@ -47,12 +47,12 @@ def get_SNP(settings, path):
     commonSNPs = list(commonSNPs)
 
     # Write common SNPS
-    with open(settings['file']['commonSNPs.txt'], 'w') as outFile:
+    with open(settings['file']['commonSNPs'], 'w') as outFile:
         for snp in commonSNPs:
             outFile.write(snp + '\n')
 
     # Print 
-    print("Common SNPs stored in " + settings['file']['commonSNPs.txt'])
+    print("Common SNPs stored in " + settings['file']['commonSNPs'])
 
 def mergeFiles(settings):
     # Creates a merge file and uses it to merge files in GWAS_binaries
@@ -107,7 +107,7 @@ def addPhenotype(settings, f, sep):
                     exclude.append(row[0])
                     outFile.write('\t'.join(row))  
 
-def IBDfilt(settings):
+def QC(settings):
     # This function computes and IBD computation and creates 
     # A list of subjects to remove removeIDs.txt in Resources 
 
@@ -155,12 +155,28 @@ def IBDfilt(settings):
         for ID in high_IBD: 
             outFile.write(ID + ' ' + ID + ' ' + '\n')
 
+    # Compute QC
+    subprocess.call({'bash', settings['sh_script']['qc.sh']})
+
 def computePCA(settings):
 
     # Compute PCA
     print("Compute PCA")
     subprocess.call(['bash', settings['sh_script']['pca.sh']])
     print("PCA computed. Ploting PCs")
+
+    # Import PCA eigenvectors
+    PCA = pd.read_csv(settings['file']['PCA_eigenvec'], header=0, delim_whitespace=True, index_col=0)
+    PCA.columns = ['IID', 'FID'] +['PC' + str(x) for x in range(1,20)]
+
+    # Plot PCs
+    Nsubjs = PCA.shape[0]
+    sns.set_style()
+    ax = sns.relplot(data=PCA, x = 'PC1', y = 'PC2')
+    ax.set(xlabel = "PC1", ylabel = "PC2", title = "PCA / #Subjects: " + str(Nsubjs))
+    plt.show()
+
+
 
 
 def main():
@@ -181,11 +197,11 @@ def main():
     # Get list of common SNPs across files 
     get_SNP(settings, path = settings['directory']['GWAS_binaries'])
 
-    # Merge files
+    # Merge files based on common SNPs
     mergeFiles(settings)
 
-    # Filter by IBD
-    IBDfilt(settings)
+    # Quality control (QC) + IBD filtering
+    QC(settings)
 
     # Compute PCA with QC
     computePCA(settings)
