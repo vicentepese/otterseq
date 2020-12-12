@@ -9,10 +9,16 @@ COMMONSNPS=$(jq -r '.file.commonSNPs' settings.json)
 # Get list of files 
 BINFILES=$(find $GWASBIN -iname '*.bim' -type f -exec sh -c 'printf "%s\n" "${0%.*}"' {} ';'| head -1)
 
-# Merge 
+# Merge and create temporal file
 plink --bfile $BINFILES \
     --merge-list $MERGELIST \
-    --out $GWASMERGE \ 
-    --extract $COMMONSNPS >> temp
-rm temp
+    --out temp >> temp
 
+# Take only common SNPS from temporal file and create merged GWAS files
+plink --bfile temp \
+    --no-sex --no-pheno --no-fid \
+    --no-parents --extract $COMMONSNPS \
+    --make-bed --out $GWASMERGE >> $GWASMERGE
+
+# Delete temporal files
+rm *temp*

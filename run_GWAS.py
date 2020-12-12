@@ -128,7 +128,7 @@ def QC(settings):
                 IBD_IDs.append(row[0])
        
     # Get list of patients and cases (remove unknown pheno)
-    patientList = list(); 
+    patientList = list()
     with open(settings['plinkFiles']['GWAS'] + '.fam','r') as inFile:
         for row in inFile:
             row = row.split('\t')
