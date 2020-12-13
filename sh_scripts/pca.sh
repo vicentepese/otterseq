@@ -18,4 +18,5 @@ plink --bfile $GWASFILE --remove $EXCLUDEIBD \
     --no-fid --no-sex --no-parents \
     --exclude-snps $rsExclude --d ';' --not-chr XY \
     --maf $MAF --geno $GENOMISS --mind $PHENOMISS \
-    --pca 20  --out $PCA > $PGA.log
+    --pca 20  --out $PCA > $PCA.log
+
