@@ -38,4 +38,8 @@ for (locus in hla.id){
   save(pred.guess, file = paste(settings$directory$HLA_Imputation, paste('HLA_', locus, sep = ''), '.RData', sep= ''))
 }
 
+# Merge HLA into final dataset
+HLA.fies = 
+
+
 
