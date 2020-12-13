@@ -176,9 +176,6 @@ def computePCA(settings):
     ax.set(xlabel = "PC1", ylabel = "PC2", title = "PCA / #Subjects: " + str(Nsubjs))
     plt.show()
 
-
-
-
 def main():
 
     # Open settings
@@ -203,7 +200,7 @@ def main():
     # Quality control (QC) + IBD filtering
     QC(settings)
 
-    # Compute PCA with QC
+    # Compute PCA 
     computePCA(settings)
 
 

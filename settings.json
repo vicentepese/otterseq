@@ -6,7 +6,8 @@
         "GWAS_binaries":"Data/GWAS_binaries/",
         "sh_scripts":"sh_scripts/",
         "Outputs":"Outputs/",
-        "Resources":"Resources/"
+        "Resources":"Resources/",
+        "HLA_Imputation":"Outputs/HLA_Imputation/"
     },
 
     "file":{
@@ -14,11 +15,13 @@
         "mergeList":"Resources/mergeList.txt",
         "IBDGenome":"Resources/LGI1.genome",
         "excludeID_IBD":"Resources/ID_IBD.txt",
-        "PCA_eigenvec":"Resources/PCA.eigenvec"
+        "PCA_eigenvec":"Resources/PCA.eigenvec",
+        "PMRA_HLA_model":"Resources/PMRA-HLA4-hg19.RData"
     },
 
     "plinkFiles":{
         "GWAS":"Data/LGI1",
+        "GWASQC":"Data/LGI1_QC",
         "PCA":"Resources/PCA"
     },
 
