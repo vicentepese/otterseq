@@ -35,7 +35,7 @@ def get_SNP(settings, path):
         print("Parsing SNPs from " + file)
         with open(join(path, file), 'r') as inFile:
             for row in inFile:
-                row = row.split('\t')
+                row = row.split()
                 SNPs.append(row[1])
             totalSNPs.append(SNPs)
     print('Finished parsing')
@@ -72,40 +72,6 @@ def mergeFiles(settings):
     print('Merging files')
     subprocess.call(['bash', settings['sh_script']['mergeFiles.sh']])
     print('Files successfully merged') 
-
-
-def addPhenotype(settings, f, sep):
-    # Opens filtLGI1 and adds the phenotype based on the list of 
-    # controls and cases. If not in cases or controls, ID is added 
-    # to list and written in exclude.txt
-    # Output modLGI1.fam 
-
-    # Read GWAS IDS
-    controlsID = list() 
-    with open(settings['file']['GWASIDsControls'], 'r') as inFile:
-        for row in inFile:
-            controlsID.append(row.split('"')[1])
-    casesID = list()
-    with open(settings['file']['GWASIDsCases'], 'r') as inFile:
-        for row in inFile:
-            casesID.append(row.split('"')[1])
-
-    # Feed phenotype to fam file and create exclude list
-    exclude = list()
-    with open(settings['file']['modLGI1.fam'], 'w') as outFile:
-        with open(f + '.fam', 'r') as inFile:
-            for row in inFile:
-                row = row.split(sep)
-                subjectID = row[0].split('_')[3].split('.')[0]
-                if subjectID in controlsID:
-                    row[-1] = '1'
-                    outFile.write('\t'.join(row) + '\n')
-                elif subjectID in casesID:
-                    row[-1] = '2'
-                    outFile.write('\t'.join(row) + '\n')
-                else:
-                    exclude.append(row[0])
-                    outFile.write('\t'.join(row))  
 
 def QC(settings):
     # This function computes and IBD computation and creates 
