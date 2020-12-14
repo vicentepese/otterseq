@@ -11,8 +11,8 @@ GENOMISS=$(jq -r '.genomiss' settings.json)
 MAF=$(jq -r '.maf' settings.json)
 
 # Perform Quality control
-plink --bfile $GWASDATA --remove $IBD_ID \
-    --no-fid --no-sex --no-parents --not-chr 25,26 \
+plink2 --bfile $GWASDATA --remove $IBD_ID --rm-dup\
+    --no-sex --no-parents --not-chr 25,26 \
     --maf $MAF --geno $GENOMISS --mind $PHENOMISS \
-    --make-bed --out $GWASDATAQC >> $GWASDATAQC
+    --make-bed --out $GWASDATAQC >> tst
 
