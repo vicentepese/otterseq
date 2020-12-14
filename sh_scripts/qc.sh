@@ -14,5 +14,5 @@ MAF=$(jq -r '.maf' settings.json)
 plink2 --bfile $GWASDATA --remove $IBD_ID --rm-dup\
     --no-sex --no-parents --not-chr 25,26 \
     --maf $MAF --geno $GENOMISS --mind $PHENOMISS \
-    --make-bed --out $GWASDATAQC >> tst
+    --make-bed --out $GWASDATAQC >> $GWASDATAQC
 
