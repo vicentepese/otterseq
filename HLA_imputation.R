@@ -8,6 +8,9 @@ library(viridis)
 library(hrbrthemes)
 library(HIBAG)
 library(parallel)
+library(ggplot2)
+library(gridExtra)
+library(rlist)
 
 ########## IMPORT ##########
 setwd("~/Documents/GWAS_pipeline")
@@ -38,8 +41,61 @@ for (locus in hla.id){
   save(pred.guess, file = paste(settings$directory$HLA_Imputation, paste('HLA_', locus, sep = ''), '.RData', sep= ''))
 }
 
-# Merge HLA into final dataset
-HLA.fies = 
+################ MERGE #############
 
+# Initialize loop# List of files to merge 
+file.names <- list.files(settings$directory$HLA_Imputation) 
+
+# First pass
+f <- file.names[1]
+load(paste0(settings$directory$HLA_Imputation, f)) %>% .['value']
+HLA.data <- pred.guess$value
+
+# Get probs and alleles
+probs.data <- HLA.data[,c(1,4)]
+HLA.data <- HLA.data[,1:3]
+colnames(HLA.data) <- c("sample.id", paste0(pred.guess$locus, '.1'), paste0(pred.guess$locus, '.2'))
+colnames(probs.data) <- c("sample.id", paste0("prob.", pred.guess$locus))
+
+# Merge rest of files
+for (f in file.names[2:length(file.names)]){
+  
+  # Print for loop
+  print(paste0("Current file: ", f))
+  
+  # Load file 
+  load(paste0(settings$directory$HLA_Imputation, f))
+  data <- pred.guess$value[,c(1:3)]
+  probs <- pred.guess$value[,c(1,4)]
+  colnames(data)[1:3] <- c("sample.id", paste0(pred.guess$locus, '.1'), paste0(pred.guess$locus, '.2'))
+  colnames(probs) <- c("sample.id", paste0("prob.", pred.guess$locus))
+  
+  # Merge by sample.id
+  HLA.data <- merge(HLA.data, data, by = "sample.id")
+  
+  # Merge probs by sample.id
+  probs.data <- merge(probs.data, probs, by = "sample.id")
+}
+
+# Write 
+write.table(HLA.data, file = settings$file$HLA_calls, sep = ',', quote = FALSE, row.names = FALSE, col.names = TRUE)
+write.table(probs.data, file = settings$file$HLA_probs, sep = ',', quote = FALSE, row.names = FALSE, col.names = TRUE)
+
+# Plot probabilities
+pl <- vector('list', ncol(probs.data)-1)
+idx <- 1
+for (i in 2:ncol(probs.data)){
+  
+  pl[[i-1]] <- local({
+    i <- i
+    p1 <- ggplot(probs.data, aes(get(colnames(probs.data)[i]))) +
+      geom_histogram() +
+      xlab(colnames(probs.data)[i]) + xlim(0,1)
+    print(p1)
+  })
+  
+  
+}
+do.call(grid.arrange, pl)
 
 

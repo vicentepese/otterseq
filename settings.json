@@ -16,7 +16,8 @@
         "IBDGenome":"Resources/LGI1.genome",
         "excludeID_IBD":"Resources/ID_IBD.txt",
         "PCA_eigenvec":"Resources/PCA.eigenvec",
-        "PMRA_HLA_model":"Resources/PMRA-HLA4-hg19.RData"
+        "PMRA_HLA_model":"Resources/PMRA-HLA4-hg19.RData",
+        "HLA_calls":"Outputs/HLA_Imputation/HLA_LGI1.csv"
     },
 
     "plinkFiles":{
