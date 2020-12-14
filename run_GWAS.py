@@ -142,6 +142,71 @@ def computePCA(settings):
     ax.set(xlabel = "PC1", ylabel = "PC2", title = "PCA / #Subjects: " + str(Nsubjs))
     plt.show()
 
+def patientMatching(settings):
+
+    # Perform patient matching
+    print("Computing patient matching as the Euclidean distance between each case and control")
+
+    # GET IDS and PCs
+    PCs = pd.read_csv(settings['file']['PCA_eigenvec'])
+
+    # # Open cases ID
+    # casesID = np.array([])
+    # with open(settings['file']['GWASIDsCases'], 'r') as inFile:
+    #     for row in inFile:
+    #         casesID = np.append(casesID, row.split("\"")[1])
+
+    # # Open controls ID and get the ones in PatIDs (some removed in filtering)
+    # controlsID = np.array([])
+    # with open(settings['file']['GWASIDsControls'], 'r') as inFile:
+    #     for row in inFile:
+    #         controlsID = np.append(controlsID, row.split("\"")[1])
+    # controlsID = np.asanyarray([id for id in controlsID if id in patIDs])
+
+    # # Get matching patients
+    # ratio = settings['ControlCaseRatio']
+
+    # # For each case, compute euclidean distance
+    # keepIndxs = list()
+    # for case in casesID:
+
+    #     # If case filtered or in exclusion list, continue 
+    #     if case not in patIDs:
+    #         continue
+        
+    #     # Get the index and PCs of the case. Store.
+    #     idx = int(np.where(patIDs == case)[0][0])
+    #     keepIndxs.append(idx)
+    #     patPCs = PCs[idx]
+
+    #     # Compute euclidean distance against all controls 
+    #     patEuDist = list()
+    #     for control in controlsID: 
+
+    #         # If control filtered or in exclusion list, continue
+    #         if control not in patIDs:
+    #             continue
+
+    #         # Get controls PCs and compute euclidean distance
+    #         ctrlidx = int(np.where(patIDs == control)[0][0])
+    #         ctrlPCs = PCs[ctrlidx]
+    #         patEuDist.append(euclidean(patPCs, ctrlPCs))
+
+    #     # Get lower distances between case and controls
+    #     tempidx = np.asanyarray(patEuDist).argsort()[:ratio]
+    #     ctrlsIDtemp = controlsID[tempidx]
+
+    #     # Keep indxs
+    #     for ctrl in ctrlsIDtemp:
+    #         keepIndxs.append(np.where(patIDs == ctrl)[0][0])
+        
+    # keepIndxs = np.unique(keepIndxs)
+    # # Write list of patients 
+    # patIDsGWAS = patIDsGWAS[keepIndxs]
+    # with open(settings['file']['patList_SSNP'], 'w') as outFile:
+    #     for pat in patIDsGWAS:
+    #         outFile.write(pat + ' ' + pat + '\n')
+
 def main():
 
     # Open settings
