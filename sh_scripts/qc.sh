@@ -9,9 +9,16 @@ IBD_ID=$(jq -r '.file.excludeID_IBD' settings.json)
 PHENOMISS=$(jq -r '.phenomiss' settings.json)
 GENOMISS=$(jq -r '.genomiss' settings.json)
 MAF=$(jq -r '.maf' settings.json)
+DupSNPs=$(jq -r '.file.DupSNPs' settings.json)
+
+# Parse duplicate rsIDs
+plink --bfile $GWASDATA --list-duplicate-vars\
+    --out temp
+awk '{print $4}' temp.dupvar > $DupSNPs
+rm -r temp*
 
 # Perform Quality control
-plink2 --bfile $GWASDATA --remove $IBD_ID --rm-dup\
+plink --bfile $GWASDATA --remove $IBD_ID --exclude $DupSNPs\
     --no-sex --no-parents --not-chr 25,26 \
     --maf $MAF --geno $GENOMISS --mind $PHENOMISS \
     --make-bed --out $GWASDATAQC >> $GWASDATAQC
