@@ -10,10 +10,10 @@ PHENOMISS=$(jq -r '.phenomiss' settings.json)
 GENOMISS=$(jq -r '.genomiss' settings.json)
 MAF=$(jq -r '.maf' settings.json)
 DupSNPs=$(jq -r '.file.DupSNPs' settings.json)
-TripSNPS=$(jq -r '.file.TripSNPs' settigs.json)
+TripSNPS=$(jq -r '.file.TripSNPs' settings.json)
 
 # Remove duplicate variants (based on position and allele codes)
-plink --bfile $GWASDATA --list-duplicate-vars\
+plink --bfile $GWASDATA --list-duplicate-vars suppress-first \
     --out temp
 awk '{print $4}' temp.dupvar > $DupSNPs
 rm -r temp*
@@ -27,7 +27,7 @@ plink --bfile $GWASDATA --remove $IBD_ID --exclude $DupSNPs\
 # Remove triplicated variants / multiallelic variants
 plink --bfile $GWASDATAQC --list-duplicate-vars\
     --out temp
-awk '{print $4}' temp.dupvar > $TripSNPs
+awk '{print $4}' temp.dupvar > $TripSNPS
 rm -r temp*
 
 plink --bfile $GWASDATA --remove $IBD_ID --exclude $TripSNPs\

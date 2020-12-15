@@ -25,4 +25,7 @@ _Data/GWAS\_binaries_: Folder containing binarized GWAS files. Files can be dire
 ## Dataset modifications
 _Data/GWAS/Stanford/Plates\_117\_118\_119\_PMRA.ped_: 
 1. Removed line 194 and 289, COPY
-2. Modified bim file from Oxford (removed GSA-, seq-, and other... see preprocessing)
+2. Modified bim file from Oxford (removed
+10	chr10-96521657:rs12248560-AC	115.27	96521657	A	C
+10	chr10-96521657:rs12248560-TC	115.27	96521657	A	G 
+for being biallelic)
