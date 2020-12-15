@@ -18,6 +18,7 @@
         "PCA_eigenvec":"Resources/PCA.eigenvec",
         "PMRA_HLA_model":"Resources/PMRA-HLA4-hg19.RData",
         "DupSNPs":"Resources/DupSNPs",
+        "TripSNPs":"Resources/TripSNPs",
         "HLA_calls":"Outputs/HLA_Imputation/HLA_LGI1.csv"
     },
 
