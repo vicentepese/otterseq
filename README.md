@@ -29,3 +29,22 @@ _Data/GWAS/Stanford/Plates\_117\_118\_119\_PMRA.ped_:
 10	chr10-96521657:rs12248560-AC	115.27	96521657	A	C
 10	chr10-96521657:rs12248560-TC	115.27	96521657	A	G 
 for being biallelic)
+
+## THINGS TO CHANGE 
+
+### PREPROCESSING 
+Non-standaradized, write about it 
+
+### 1000 genome imputation 
+(i)Non-standarized, write main code
+    (i)+ make path standarized
+(ii) Issue when converting from bgen to binary PED - IID is replaced by index --> fix code so that sample becomes .fam
+(iii) Create SLURM log folder to save slurm, an shape it
+(iv) Change name of SLURM logs
+(v) Still cannot merge all binary PED files
+
+### GWAS PIPELINE
+(i) QC does not remove multiallelic, maybe include
+(ii) PCA having issues
+(iii) Current version includes no pheno -- maybe allow option instead of list?
+(iv) Remove content of folders in each iteration automatically?

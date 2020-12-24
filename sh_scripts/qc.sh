@@ -12,25 +12,26 @@ MAF=$(jq -r '.maf' settings.json)
 DupSNPs=$(jq -r '.file.DupSNPs' settings.json)
 TripSNPS=$(jq -r '.file.TripSNPs' settings.json)
 
-# Remove duplicate variants (based on position and allele codes)
+# Parse duplicate variants (based on position and allele codes)
 plink --bfile $GWASDATA --list-duplicate-vars suppress-first \
-    --out temp
+    --out temp > temp
 awk '{print $4}' temp.dupvar > $DupSNPs
 rm -r temp*
 
-# Perform Quality control
+# Perform Quality control - Remove duplicated variants
 plink --bfile $GWASDATA --remove $IBD_ID --exclude $DupSNPs\
     --no-sex --no-parents --not-chr 25,26 \
     --maf $MAF --geno $GENOMISS --mind $PHENOMISS \
-    --make-bed --out $GWASDATAQC >> $GWASDATAQC
+    --make-bed --out gwastemp >> gwastemp
 
 # Remove triplicated variants / multiallelic variants
-plink --bfile $GWASDATAQC --list-duplicate-vars\
-    --out temp
+plink --bfile gwastemp --list-duplicate-vars\
+    --out temp > temp
 awk '{print $4}' temp.dupvar > $TripSNPS
 rm -r temp*
 
-plink --bfile $GWASDATA --remove $IBD_ID --exclude $TripSNPs\
+plink --bfile gwastemp --remove $IBD_ID --exclude $TripSNPS\
     --no-sex --no-parents --not-chr 25,26 \
     --maf $MAF --geno $GENOMISS --mind $PHENOMISS \
     --make-bed --out $GWASDATAQC >> $GWASDATAQC
+rm -r gwastemp*

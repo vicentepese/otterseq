@@ -122,7 +122,7 @@ def QC(settings):
             outFile.write(ID + ' ' + ID + ' ' + '\n')
 
     # Compute QC
-    subprocess.call({'bash', settings['sh_script']['qc.sh']})
+    subprocess.call(['bash', settings['sh_script']['qc.sh']])
 
 def computePCA(settings):
 

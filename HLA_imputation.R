@@ -45,10 +45,11 @@ for (locus in hla.id){
 
 # Initialize loop# List of files to merge 
 file.names <- list.files(settings$directory$HLA_Imputation) 
+file.names <- file.names[which(grepl(x=file.names, pattern = '.RData'))]
 
 # First pass
 f <- file.names[1]
-load(paste0(settings$directory$HLA_Imputation, f)) %>% .['value']
+load(paste0(settings$directory$HLA_Imputation, f))
 HLA.data <- pred.guess$value
 
 # Get probs and alleles

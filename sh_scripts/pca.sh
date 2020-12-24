@@ -9,7 +9,7 @@ EXCLUDEIBD=$(jq -r '.file.excludeID_IBD' settings.json)
 PCA=$(jq -r '.plinkFiles.PCA' settings.json)
 
 # Parse SNPs (rs_xxxxxxxx) belonging to HLA region 
-plink --bfile $GWASFILE --no-fid --no-sex --no-parents --chr 6 --from-bp 28477797 --to-bp 33448354 --make-bed --out temp
+plink --bfile $GWASFILE --no-fid --no-sex --no-parents --chr 6 --from-bp 28477797 --to-bp 33448354 --make-bed --out temp > temp
 rsExclude=$(awk '{ ORS=", "};{print $2}' temp.bim)
 rm -r temp*
 
