@@ -26,12 +26,12 @@ awk 'a[$1]++{$1=$1" "$1; print $1}' $GWASDATA.fam > $DupIIDs
 plink --bfile $GWASDATA --remove $IBD_ID --exclude $DupSNPs\
     --allow-no-sex \
     --maf $MAF --geno $GENOMISS --mind $PHENOMISS \
-    --make-bed --out gwastemp >> gwastemp
+    --make-bed --out gwastemp > gwastemp
 
 # Perform Quality Control - Remove duplicated IIDs
 plink --bfile gwastemp --remove $DupIIDs \
     --allow-no-sex \
-    --make-bed --out gwastempFilt >> gwastempFilt
+    --make-bed --out gwastempFilt > gwastempFilt
 rm -r gwastemp.*
 
 # Parse triplicated variants / multiallelic variants
@@ -45,16 +45,3 @@ plink --bfile gwastempFilt --exclude $TripSNPS\
     --allow-no-sex \
     --make-bed --out $GWASDATAQC >> $GWASDATAQC
 rm -r gwastemp*
-
-
-# plink --bfile gwastemp --remove $IBD_ID --exclude $TripSNPS\
-#     --no-sex --no-parents --not-chr 25,26 \
-#     --maf $MAF --geno $GENOMISS --mind $PHENOMISS \
-#     --make-bed --out $GWASDATAQC >> $GWASDATAQC
-# rm -r gwastemp*
-
-# # Perform Quality control - Remove duplicated variants
-# plink --bfile $GWASDATA --remove $IBD_ID --exclude $DupSNPs\
-#     --no-sex --no-parents --not-chr 25,26 \
-#     --maf $MAF --geno $GENOMISS --mind $PHENOMISS \
-#     --make-bed --out gwastemp >> gwastemp
