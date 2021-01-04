@@ -22,6 +22,12 @@ settings <- jsonlite::fromJSON('settings.json')
 
 # Load pre-fit model and comvert to hlaMODEL
 model.list <- get(load(settings$file$PMRA_HLA_model))
+drb3 <- get(load(settings$file$PMRA_HLA_DRB3))
+drb4 <- get(load(settings$file$PMRA_HLA_DRB4))
+drb5 <- get(load(settings$file$PMRA_HLA_DRB5))
+model.list[["DRB3"]] <- drb3
+model.list[["DRB4"]] <- drb4
+model.list[["DRB5"]] <- drb5
 hla.id <- names(model.list)
 
 # Import file

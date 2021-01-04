@@ -16,9 +16,15 @@ plink --bfile $BINFILES \
 
 # Take only common SNPS from temporal file and create merged GWAS files
 plink --bfile temp \
-    --no-sex --no-pheno --no-fid \
-    --no-parents --extract $COMMONSNPS \
+    --allow-no-sex  \
+    --extract $COMMONSNPS \
     --make-bed --out $GWASMERGE >> $GWASMERGE
+
+# plink --bfile temp \
+#     --allow no-sex --no-pheno --no-fid \
+#     --no-parents --extract $COMMONSNPS \
+#     --make-bed --out $GWASMERGE >> $GWASMERGE
+
 
 # Delete temporal files
 rm *temp*

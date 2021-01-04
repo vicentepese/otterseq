@@ -17,15 +17,19 @@
         "excludeID_IBD":"Resources/ID_IBD.txt",
         "PCA_eigenvec":"Resources/PCA.eigenvec",
         "PMRA_HLA_model":"Resources/PMRA-HLA4-hg19.RData",
+        "PMRA_HLA_DRB3":"Resources/PMRA_HLA_DRB3.RData",
+        "PMRA_HLA_DRB4":"Resources/PMRA_HLA_DRB4.RData",
+        "PMRA_HLA_DRB5":"Resources/PMRA_HLA_DRB5.RData",
         "DupSNPs":"Resources/DupSNPs",
         "TripSNPs":"Resources/TripSNPs",
+        "DupIIDs":"Resources/DupIIDs",
         "HLA_calls":"Outputs/HLA_Imputation/HLA_LGI1.csv",
         "HLA_probs":"Outputs/HLA_Imputation/HLA_LGI1_probs.csv"
     },
 
     "plinkFiles":{
         "GWAS":"Data/LGI1",
-        "GWASQC":"Data/CHR6_LGI1_QC",
+        "GWASQC":"Data/LGI1_QC",
         "PCA":"Resources/PCA"
     },
 

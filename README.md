@@ -42,6 +42,7 @@ Non-standaradized, write about it
 (iii) Create SLURM log folder to save slurm, an shape it
 (iv) Change name of SLURM logs
 (v) Still cannot merge all binary PED files
+(vi) Include QC there 
 
 ### GWAS PIPELINE
 (i) QC does not remove multiallelic, maybe include
