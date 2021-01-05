@@ -23,6 +23,7 @@
         "DupSNPs":"Resources/DupSNPs",
         "TripSNPs":"Resources/TripSNPs",
         "DupIIDs":"Resources/DupIIDs",
+        "pheno":"Resources/pheno.txt",
         "HLA_calls":"Outputs/HLA_Imputation/HLA_LGI1.csv",
         "HLA_probs":"Outputs/HLA_Imputation/HLA_LGI1_probs.csv"
     },

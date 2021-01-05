@@ -45,3 +45,9 @@ plink --bfile gwastempFilt --exclude $TripSNPS\
     --allow-no-sex \
     --make-bed --out $GWASDATAQC >> $GWASDATAQC
 rm -r gwastemp*
+
+# Clean .bim file to remove commas (PCA)
+awk '{
+    gsub(/\,/, ":", $2); print $0
+    }' $GWASDATAQC.bim > temp.bim
+mv temp.bim $GWASDATAQC.bim

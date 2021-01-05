@@ -105,16 +105,14 @@ def QC(settings):
     # Get list of IBDS patient/cases (unknown pheno not included)
     high_IBD = [ID for ID in np.unique(IBD_IDs) if ID in patientList]
     
-    # # Check number of cases and controls
-    # case_count = 0 ; control_count = 0 
-    # for ID in high_IBD:
-    #     ID_pre = ID.split('_')[-1].split('.')[0]
-    #     if ID_pre in cases:
-    #         case_count +=1
-    #     elif ID_pre in controls:
-    #         control_count += 1
-    # print('Number of cases to be excluded: ' + str(case_count))
-    # print('Number of controls to be excluded: ' + str(control_count))
+    # Check number of cases and controls
+    pheno = pd.read_csv(settings['file']['pheno'], sep = ' ', header = None)
+    cases = pheno[pheno['pheno'] == 1]
+    controls = pheno[pheno['pheno'] == 0]
+    case_count = len([subj for subj in high_IBD if subj in cases['IID']])
+    control_count = len([subj for subj in high_IBD if subj in controls['IID']])
+    print('Number of cases to be excluded by IBD: ' + str(case_count))
+    print('Number of controls to be excluded by IBD: ' + str(control_count))
 
     # Create exclusion file 
     with open(settings['file']['excludeID_IBD'], 'w') as outFile:

@@ -49,3 +49,4 @@ Non-standaradized, write about it
 (ii) PCA having issues
 (iii) Current version includes no pheno -- maybe allow option instead of list?
 (iv) Remove content of folders in each iteration automatically?
+(v) PCA cannot be performed if "," are in the SNPS ids 
