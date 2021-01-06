@@ -17,5 +17,5 @@ rm -r temp*
 plink --bfile $GWASFILE \
     --allow-no-sex \
     --exclude-snps $rsExclude --d ';' \
-    --pca 20  --out $PCA > $PCA.log
+    --pca 20  --out $PCA
 

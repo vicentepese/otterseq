@@ -3,12 +3,13 @@ import subprocess
 import json
 import os
 from os.path import isfile, join
-from collections import defaultdict
+from collections import defaultdict, OrderedDict
 import matplotlib.pyplot as plt
 import scipy 
 from scipy.spatial.distance import euclidean 
 import seaborn as sns
 import pandas as pd
+
 
 def binarizeFiles(settings):
 
@@ -107,6 +108,7 @@ def QC(settings):
     
     # Check number of cases and controls
     pheno = pd.read_csv(settings['file']['pheno'], sep = ' ', header = None)
+    pheno.columns = ['IID', 'FID', 'pheno']
     cases = pheno[pheno['pheno'] == 1]
     controls = pheno[pheno['pheno'] == 0]
     case_count = len([subj for subj in high_IBD if subj in cases['IID']])
@@ -130,13 +132,19 @@ def computePCA(settings):
     print("PCA computed. Ploting PCs")
 
     # Import PCA eigenvectors
-    PCA = pd.read_csv(settings['file']['PCA_eigenvec'], header=0, delim_whitespace=True, index_col=0)
-    PCA.columns = ['IID', 'FID'] +['PC' + str(x) for x in range(1,20)]
+    PCA = pd.read_csv(settings['file']['PCA_eigenvec'], header = None, delim_whitespace = True)
+    PCA.columns = ['IID', 'FID'] + ['PC' + str(x) for x in range(1,21)]
+
+    # Merge with pheno
+    pheno = pd.read_csv(settings['file']['pheno'], sep = ' ', header = None)
+    pheno.columns = ['IID', 'FID', 'pheno']
+    pheno['IID']=pheno['IID'].astype(object)
+    tst = pd.merge(PCA, pheno, on='IID')
 
     # Plot PCs
     Nsubjs = PCA.shape[0]
     sns.set_style()
-    ax = sns.relplot(data=PCA, x = 'PC1', y = 'PC2')
+    ax = sns.relplot(data=tst, x = 'PC1', y = 'PC2', hue = "pheno")
     ax.set(xlabel = "PC1", ylabel = "PC2", title = "PCA / #Subjects: " + str(Nsubjs))
     plt.show()
 
@@ -145,65 +153,56 @@ def patientMatching(settings):
     # Perform patient matching
     print("Computing patient matching as the Euclidean distance between each case and control")
 
-    # GET IDS and PCs
-    PCs = pd.read_csv(settings['file']['PCA_eigenvec'])
+    # Get PCs, cases and controls
+    PCA = pd.read_csv(settings['file']['PCA_eigenvec'], header = None, delim_whitespace = True)
+    PCA.columns = ['IID', 'FID'] + ['PC' + str(x) for x in range(1,21)]
+    pheno = pheno = pd.read_csv(settings['file']['pheno'], sep = ' ', header = None)
+    pheno.columns = ['IID', 'FID', 'pheno']
+    cases = pheno[pheno['pheno'] == 1]
+    controls = pheno[pheno['pheno'] == 0]
 
-    # # Open cases ID
-    # casesID = np.array([])
-    # with open(settings['file']['GWASIDsCases'], 'r') as inFile:
-    #     for row in inFile:
-    #         casesID = np.append(casesID, row.split("\"")[1])
+    # Get matching patients ratio
+    ratio = settings['ControlCaseRatio']
 
-    # # Open controls ID and get the ones in PatIDs (some removed in filtering)
-    # controlsID = np.array([])
-    # with open(settings['file']['GWASIDsControls'], 'r') as inFile:
-    #     for row in inFile:
-    #         controlsID = np.append(controlsID, row.split("\"")[1])
-    # controlsID = np.asanyarray([id for id in controlsID if id in patIDs])
+    # For each case, compute euclidean distance
+    # For each case, compute euclidean distance
+    matched_controls = pd.DataFrame()
+    for idx, (IID, FID) in enumerate(zip(cases['IID'], cases['FID'])):
 
-    # # Get matching patients
-    # ratio = settings['ControlCaseRatio']
+        # Print
+        print("\rMatching subject {0} of {1} \r".format(idx, cases.shape[0]))
 
-    # # For each case, compute euclidean distance
-    # keepIndxs = list()
-    # for case in casesID:
+        # Get the index and PCs of the case. Store.
+        PC_case = PCA[PCA.IID.eq(IID) & PCA.FID.eq(FID)].drop(['IID', 'FID'], axis = 1)
 
-    #     # If case filtered or in exclusion list, continue 
-    #     if case not in patIDs:
-    #         continue
+        # Compute euclidean distance against all controls 
+        patEuDist = defaultdict(list)
+        for idx_ctrl, IID_ctrl, FID_ctrl in zip(controls.index, controls['IID'], controls['FID']):
+
+            # Get controls PCs and compute euclidean distance
+            PC_ctrl = PCA[PCA.IID.eq(IID_ctrl) & PCA.FID.eq(FID_ctrl)].drop(['IID', 'FID'], axis = 1) 
+            patEuDist['IID_case'].append(IID); patEuDist['FID_case'].append(FID)
+            patEuDist['IID_control'].append(IID_ctrl); patEuDist['FID_control'].append(FID_ctrl)
+            patEuDist['dist'].append(euclidean(PC_case, PC_ctrl))
+
+        # Sort DataFrame
+        patEuDist = pd.DataFrame(patEuDist)
+        patEuDist= patEuDist.sort_values(by = "dist",  ascending=True)
+
+        # Get #ratio# of matched controls and append to DataFrame
+        matched_controls = matched_controls.append(patEuDist[['IID_control','FID_control']][0:50])
+
+    # Drop duplicated and append pheno
+    matched_controls.drop_duplicates()
+    matched_controls['pheno'] = [0]*matched_controls.shape[0]
+
+    # Create patient list
+    patList = matched_controls
+    patList.columns = ['IID', 'FID', 'pheno']
+    patList = patList.append(cases)
         
-    #     # Get the index and PCs of the case. Store.
-    #     idx = int(np.where(patIDs == case)[0][0])
-    #     keepIndxs.append(idx)
-    #     patPCs = PCs[idx]
-
-    #     # Compute euclidean distance against all controls 
-    #     patEuDist = list()
-    #     for control in controlsID: 
-
-    #         # If control filtered or in exclusion list, continue
-    #         if control not in patIDs:
-    #             continue
-
-    #         # Get controls PCs and compute euclidean distance
-    #         ctrlidx = int(np.where(patIDs == control)[0][0])
-    #         ctrlPCs = PCs[ctrlidx]
-    #         patEuDist.append(euclidean(patPCs, ctrlPCs))
-
-    #     # Get lower distances between case and controls
-    #     tempidx = np.asanyarray(patEuDist).argsort()[:ratio]
-    #     ctrlsIDtemp = controlsID[tempidx]
-
-    #     # Keep indxs
-    #     for ctrl in ctrlsIDtemp:
-    #         keepIndxs.append(np.where(patIDs == ctrl)[0][0])
-        
-    # keepIndxs = np.unique(keepIndxs)
-    # # Write list of patients 
-    # patIDsGWAS = patIDsGWAS[keepIndxs]
-    # with open(settings['file']['patList_SSNP'], 'w') as outFile:
-    #     for pat in patIDsGWAS:
-    #         outFile.write(pat + ' ' + pat + '\n')
+    # Write patient list to csv file 
+    patList.to_csv('test.txt', sep = '\t', header = None)
 
 def main():
 
