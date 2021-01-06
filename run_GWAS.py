@@ -124,11 +124,11 @@ def QC(settings):
     # Compute QC
     subprocess.call(['bash', settings['sh_script']['qc.sh']])
 
-def computePCA(settings):
+def computePCA(settings, type):
 
     # Compute PCA
     print("Compute PCA")
-    subprocess.call(['bash', settings['sh_script']['pca.sh']])
+    subprocess.call('bash ' + settings['sh_script']['pca.sh'] + ' -t ' + type, shell=True)
     print("PCA computed. Ploting PCs")
 
     # Import PCA eigenvectors
@@ -229,8 +229,10 @@ def main():
     QC(settings)
 
     # Compute PCA 
-    computePCA(settings)
+    computePCA(settings, type = "batch")
 
+    # Compute case-control matching 
+    
 
     
 
