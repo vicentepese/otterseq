@@ -41,6 +41,7 @@ case $key in
     then 
         TYPE=batch
     elif [ "$2" == "match" ]
+    then
         TYPE=match
     else
         echo "Invalid option, please see --help for more information."

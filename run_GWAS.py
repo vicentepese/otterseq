@@ -135,16 +135,21 @@ def computePCA(settings, type):
     PCA = pd.read_csv(settings['file']['PCA_eigenvec'], header = None, delim_whitespace = True)
     PCA.columns = ['IID', 'FID'] + ['PC' + str(x) for x in range(1,21)]
 
-    # Merge with pheno
-    pheno = pd.read_csv(settings['file']['pheno'], sep = ' ', header = None)
-    pheno.columns = ['IID', 'FID', 'pheno']
-    pheno['IID']=pheno['IID'].astype(object)
-    tst = pd.merge(PCA, pheno, on='IID')
+    # Merge with pheno # TODO: finish this
+    if type == "batch":
+        pheno = pd.read_csv(settings['file']['pheno'], sep = ' ', header = None)
+        pheno.columns = ['IID', 'FID', 'pheno']
+        pheno['IID']=pheno['IID'].astype(object)
+    elif type == "match":
+        pheno = pd.read_csv(settings['file']['pheno_matched'], sep = ' ', header = None)
+        pheno.columns = ['IID', 'FID', 'pheno']
+        pheno['IID']=pheno['IID'].astype(object)
+    PCA = pd.merge(PCA, pheno, on='IID')
 
     # Plot PCs
     Nsubjs = PCA.shape[0]
     sns.set_style()
-    ax = sns.relplot(data=tst, x = 'PC1', y = 'PC2', hue = "pheno")
+    ax = sns.relplot(data=PCA, x = 'PC1', y = 'PC2', hue = "pheno")
     ax.set(xlabel = "PC1", ylabel = "PC2", title = "PCA / #Subjects: " + str(Nsubjs))
     plt.show()
 
@@ -170,7 +175,7 @@ def patientMatching(settings):
     for idx, (IID, FID) in enumerate(zip(cases['IID'], cases['FID'])):
 
         # Print
-        print("\rMatching subject {0} of {1} \r".format(idx, cases.shape[0]))
+        print("\rMatching subject {0} of {1} \r".format(idx, cases.shape[0]-1))
 
         # Get the index and PCs of the case. Store.
         PC_case = PCA[PCA.IID.eq(IID) & PCA.FID.eq(FID)].drop(['IID', 'FID'], axis = 1)
@@ -204,6 +209,9 @@ def patientMatching(settings):
     # Write patient list to csv file 
     patList.to_csv('test.txt', sep = '\t', header = None)
 
+    # Print 
+    print ("Cases successfully matched. Matched controls: " +  str(patList[patList.pheno == 0].shape[0]))
+
 def main():
 
     # Open settings
@@ -232,7 +240,10 @@ def main():
     computePCA(settings, type = "batch")
 
     # Compute case-control matching 
-    
+    patientMatching(settings)
+
+    # Compute PCA 
+    computePCA(settings, type = "match")
 
     
 
