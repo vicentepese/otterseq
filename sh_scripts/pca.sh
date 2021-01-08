@@ -76,13 +76,13 @@ else
 
     # Matched cases-controls 
     PATLIST=$(jq -r '.file.pheno_matched' settings.json)
-    PCAMATCH=$(jq -r '.file.PCA_matched' settings.json)
+    PCAMATCH=$(jq -r '.plinkFiles.PCA_matched' settings.json)
 
     # Compute PCA excluding by IBD, missingness, and HLA region
     plink --bfile $GWASFILE \
         --allow-no-sex \
         --pheno $PATLIST \
         --exclude-snps $rsExclude --d ';' \
-        --pca 20  --out $PCAMATCH
-
+        --pca 20 --out $PCAMATCH
+fi
 

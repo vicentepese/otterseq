@@ -12,12 +12,14 @@ BINFILES=$(find $GWASBIN -iname '*.bim' -type f -exec sh -c 'printf "%s\n" "${0%
 # Merge and create temporal file
 plink --bfile $BINFILES \
     --merge-list $MERGELIST \
+    --memory 4604003776 \
     --out temp >> temp
 
 # Take only common SNPS from temporal file and create merged GWAS files
 plink --bfile temp \
     --allow-no-sex  \
     --extract $COMMONSNPS \
+    --memory 4604003776 \
     --make-bed --out $GWASMERGE >> $GWASMERGE
 
 # plink --bfile temp \

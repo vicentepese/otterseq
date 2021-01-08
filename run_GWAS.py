@@ -78,10 +78,10 @@ def QC(settings):
     # This function computes and IBD computation and creates 
     # A list of subjects to remove removeIDs.txt in Resources 
 
-    # Run IBD computation
-    print('Computing IBD')
-    subprocess.call(['bash',settings['sh_script']['IBD.sh']])
-    print("IBD successfully computed")
+    # # Run IBD computation
+    # print('Computing IBD')
+    # subprocess.call(['bash',settings['sh_script']['IBD.sh']])
+    # print("IBD successfully computed")
 
     # Get list of patients to be removed 
     IBD_IDs = list()
@@ -131,16 +131,23 @@ def computePCA(settings, type):
     subprocess.call('bash ' + settings['sh_script']['pca.sh'] + ' -t ' + type, shell=True)
     print("PCA computed. Ploting PCs")
 
-    # Import PCA eigenvectors
-    PCA = pd.read_csv(settings['file']['PCA_eigenvec'], header = None, delim_whitespace = True)
-    PCA.columns = ['IID', 'FID'] + ['PC' + str(x) for x in range(1,21)]
-
     # Merge with pheno # TODO: finish this
     if type == "batch":
+
+        # Impport PCA
+        PCA = pd.read_csv(settings['file']['PCA_eigenvec'], header = None, delim_whitespace = True)
+        PCA.columns = ['IID', 'FID'] + ['PC' + str(x) for x in range(1,21)]
+
+        # Import pheno 
         pheno = pd.read_csv(settings['file']['pheno'], sep = ' ', header = None)
         pheno.columns = ['IID', 'FID', 'pheno']
         pheno['IID']=pheno['IID'].astype(object)
     elif type == "match":
+
+        # Import PCA 
+        PCA = pd.read_csv(settings['file']['PCA_matched'], header = None, delim_whitespace = True)
+        PCA.columns = ['IID', 'FID'] + ['PC' + str(x) for x in range(1,21)]
+
         pheno = pd.read_csv(settings['file']['pheno_matched'], sep = ' ', header = None)
         pheno.columns = ['IID', 'FID', 'pheno']
         pheno['IID']=pheno['IID'].astype(object)
@@ -175,7 +182,7 @@ def patientMatching(settings):
     for idx, (IID, FID) in enumerate(zip(cases['IID'], cases['FID'])):
 
         # Print
-        print("\rMatching subject {0} of {1} \r".format(idx, cases.shape[0]-1))
+        print("\r Matching subject {0} of {1} \r".format(idx, cases.shape[0]-1), end='')
 
         # Get the index and PCs of the case. Store.
         PC_case = PCA[PCA.IID.eq(IID) & PCA.FID.eq(FID)].drop(['IID', 'FID'], axis = 1)
@@ -195,10 +202,10 @@ def patientMatching(settings):
         patEuDist= patEuDist.sort_values(by = "dist",  ascending=True)
 
         # Get #ratio# of matched controls and append to DataFrame
-        matched_controls = matched_controls.append(patEuDist[['IID_control','FID_control']][0:50])
+        matched_controls = matched_controls.append(patEuDist[['IID_control','FID_control']][0:ratio])
 
     # Drop duplicated and append pheno
-    matched_controls.drop_duplicates()
+    matched_controls = matched_controls.drop_duplicates()
     matched_controls['pheno'] = [0]*matched_controls.shape[0]
 
     # Create patient list
@@ -207,7 +214,7 @@ def patientMatching(settings):
     patList = patList.append(cases)
         
     # Write patient list to csv file 
-    patList.to_csv('test.txt', sep = '\t', header = None)
+    patList.to_csv(settings['file']['pheno_matched'], sep = ' ', header = None, index = False)
 
     # Print 
     print ("Cases successfully matched. Matched controls: " +  str(patList[patList.pheno == 0].shape[0]))
@@ -244,6 +251,7 @@ def main():
 
     # Compute PCA 
     computePCA(settings, type = "match")
+    computePCA(settings, type = 'batch')
 
     
 
