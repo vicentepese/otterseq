@@ -124,11 +124,11 @@ def QC(settings):
     # Compute QC
     subprocess.call(['bash', settings['sh_script']['qc.sh']])
 
-def computePCA(settings, type):
+def computePCA(settings):
 
     # Compute PCA
     print("Compute PCA")
-    subprocess.call('bash ' + settings['sh_script']['pca.sh'] + ' -t ' + type, shell=True)
+    subprocess.call('bash ' + settings['sh_script']['pca.sh'], shell=True)
     print("PCA computed. Ploting PCs")
 
 def plotPCA(settings, type = "batch"):
@@ -185,19 +185,18 @@ def patientMatching(settings):
     ratio = settings['ControlCaseRatio']
 
     # For each case, compute euclidean distance
-    # For each case, compute euclidean distance
     matched_controls = pd.DataFrame()
     for idx, (IID, FID) in enumerate(zip(cases['IID'], cases['FID'])):
 
         # Print
-        print("\r Matching subject {0} of {1} \r".format(idx, cases.shape[0]-1), end='')
+        print("Matching subject {0} of {1}".format(idx, cases.shape[0]-1), end='\r', flush=True)
 
         # Get the index and PCs of the case. Store.
         PC_case = PCA[PCA.IID.eq(IID) & PCA.FID.eq(FID)].drop(['IID', 'FID'], axis = 1)
 
         # Compute euclidean distance against all controls 
         patEuDist = defaultdict(list)
-        for idx_ctrl, IID_ctrl, FID_ctrl in zip(controls.index, controls['IID'], controls['FID']):
+        for IID_ctrl, FID_ctrl in zip(controls['IID'], controls['FID']):
 
             # Get controls PCs and compute euclidean distance
             PC_ctrl = PCA[PCA.IID.eq(IID_ctrl) & PCA.FID.eq(FID_ctrl)].drop(['IID', 'FID'], axis = 1) 
@@ -252,7 +251,7 @@ def main():
     QC(settings)
 
     # Compute PCA 
-    computePCA(settings, type = "batch")
+    computePCA(settings)
 
     # Plot PCA
     plotPCA(settings, type = "batch")
