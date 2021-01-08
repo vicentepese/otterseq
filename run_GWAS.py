@@ -260,9 +260,10 @@ def main():
     patientMatching(settings)
 
     # Compute PCA 
-    computePCA(settings, type = "match")
-    computePCA(settings, type = 'batch')
+    plotPCA(settings, type = "match")
 
+    # Perform association analysis - logistic regression
+    
     
 
 if __name__ == "__main__":
