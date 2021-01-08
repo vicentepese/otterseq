@@ -78,10 +78,10 @@ def QC(settings):
     # This function computes and IBD computation and creates 
     # A list of subjects to remove removeIDs.txt in Resources 
 
-    # # Run IBD computation
-    # print('Computing IBD')
-    # subprocess.call(['bash',settings['sh_script']['IBD.sh']])
-    # print("IBD successfully computed")
+    # Run IBD computation
+    print('Computing IBD')
+    subprocess.call(['bash',settings['sh_script']['IBD.sh']])
+    print("IBD successfully computed")
 
     # Get list of patients to be removed 
     IBD_IDs = list()
@@ -131,7 +131,9 @@ def computePCA(settings, type):
     subprocess.call('bash ' + settings['sh_script']['pca.sh'] + ' -t ' + type, shell=True)
     print("PCA computed. Ploting PCs")
 
-    # Merge with pheno # TODO: finish this
+def plotPCA(settings, type = "batch"):
+
+    # Merge with pheno -- batch: study batch biases
     if type == "batch":
 
         # Impport PCA
@@ -142,22 +144,28 @@ def computePCA(settings, type):
         pheno = pd.read_csv(settings['file']['pheno'], sep = ' ', header = None)
         pheno.columns = ['IID', 'FID', 'pheno']
         pheno['IID']=pheno['IID'].astype(object)
+
+    # match: plot PCA of matched cases /subjects
     elif type == "match":
 
         # Import PCA 
         PCA = pd.read_csv(settings['file']['PCA_matched'], header = None, delim_whitespace = True)
         PCA.columns = ['IID', 'FID'] + ['PC' + str(x) for x in range(1,21)]
 
+        # Import matched pheno
         pheno = pd.read_csv(settings['file']['pheno_matched'], sep = ' ', header = None)
         pheno.columns = ['IID', 'FID', 'pheno']
         pheno['IID']=pheno['IID'].astype(object)
+
+    # Merge with PCA
     PCA = pd.merge(PCA, pheno, on='IID')
 
     # Plot PCs
-    Nsubjs = PCA.shape[0]
+    Ncases = PCA[PCA.pheno.eq(1)].shape[0]
+    Ncontrols = PCA[PCA.pheno.eq(0)].shape[0]
     sns.set_style()
     ax = sns.relplot(data=PCA, x = 'PC1', y = 'PC2', hue = "pheno")
-    ax.set(xlabel = "PC1", ylabel = "PC2", title = "PCA / #Subjects: " + str(Nsubjs))
+    ax.set(xlabel = "PC1", ylabel = "PC2", title = "PCA -- Cases: " + str(Ncases) + " // Controls " + str(Ncontrols))
     plt.show()
 
 def patientMatching(settings):
@@ -237,14 +245,17 @@ def main():
     # Get list of common SNPs across files 
     get_SNP(settings, path = settings['directory']['GWAS_binaries'])
 
-    # Merge files based on common SNPs
-    mergeFiles(settings)
+    # # Merge files based on common SNPs
+    # mergeFiles(settings)
 
     # Quality control (QC) + IBD filtering
     QC(settings)
 
     # Compute PCA 
     computePCA(settings, type = "batch")
+
+    # Plot PCA
+    plotPCA(settings, type = "batch")
 
     # Compute case-control matching 
     patientMatching(settings)
