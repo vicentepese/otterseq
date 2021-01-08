@@ -1,0 +1,31 @@
+#!/bin/bash
+
+# Read settings 
+GWASFILE=$(jq -r '.plinkFiles.GWASQC' settings.json)
+PHENOFILE=$(jq -r '.file.pheno_matched' settings.json)
+PCA=$(jq -r '.file.PCA_eigenvec' settings.json)
+OUTPUT=$(j1 -r '.directory.GWAS_out' settings.json)
+
+# Create covar file 
+HEADER=("FID" "IID")
+for i in $(seq 1 20)
+do 
+    HEADER+=("PC"$i)
+done
+printf "%s " "${HEADER[@]}" > tst
+printf "\n" >> tst
+awk '{
+    print $0
+}' $PCA >> tst
+awk -F " " '{
+    gsub(/ +/, "\t"); print
+}' tst > covartemp  
+
+# Run logistic regression -- association analysis
+plink --bfile $GWASFILE --pheno $PHENOFILE \
+    --covar covartemp --covar-name PC1, PC2, PC3, PC4 \
+    --logistic --allow-no-sex --out ${OUTPUT}LGI1_GWAS
+
+# Remove temporary covariates
+rm -r covartemp
+

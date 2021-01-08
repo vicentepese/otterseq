@@ -7,7 +7,8 @@
         "sh_scripts":"sh_scripts/",
         "Outputs":"Outputs/",
         "Resources":"Resources/",
-        "HLA_Imputation":"Outputs/HLA_Imputation/"
+        "HLA_Imputation":"Outputs/HLA_Imputation/",
+        "GWAS_out":"Outputs/GWAS/"
     },
 
     "file":{
