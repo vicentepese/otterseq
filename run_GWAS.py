@@ -83,7 +83,7 @@ def QC(settings):
     subprocess.call(['bash',settings['sh_script']['IBD.sh']])
     print("IBD successfully computed")
 
-    # Get list of patients to be removed 
+    # Get list of patients to be removed by IBD
     IBD_IDs = list()
     with open(settings['file']['IBDGenome'], 'r') as inFile:
         next(inFile)
@@ -108,11 +108,11 @@ def QC(settings):
     
     # Check number of cases and controls
     pheno = pd.read_csv(settings['file']['pheno'], sep = ' ', header = None)
-    pheno.columns = ['IID', 'FID', 'pheno']
+    pheno.columns = ['FID', 'IID', 'pheno']
     cases = pheno[pheno['pheno'] == 1]
     controls = pheno[pheno['pheno'] == 0]
-    case_count = len([subj for subj in high_IBD if subj in cases['IID']])
-    control_count = len([subj for subj in high_IBD if subj in controls['IID']])
+    case_count = len([subj for subj in high_IBD if subj in cases['FID']])
+    control_count = len([subj for subj in high_IBD if subj in controls['FID']])
     print('Number of cases to be excluded by IBD: ' + str(case_count))
     print('Number of controls to be excluded by IBD: ' + str(control_count))
 
@@ -138,27 +138,27 @@ def plotPCA(settings, type = "batch"):
 
         # Impport PCA
         PCA = pd.read_csv(settings['file']['PCA_eigenvec'], header = None, delim_whitespace = True)
-        PCA.columns = ['IID', 'FID'] + ['PC' + str(x) for x in range(1,21)]
+        PCA.columns = ['FID', 'IID'] + ['PC' + str(x) for x in range(1,21)]
 
         # Import pheno 
         pheno = pd.read_csv(settings['file']['pheno'], sep = ' ', header = None)
-        pheno.columns = ['IID', 'FID', 'pheno']
-        pheno['IID']=pheno['IID'].astype(object)
+        pheno.columns = ['FID', 'IID', 'pheno']
+        pheno['FID']=pheno['FID'].astype(object)
 
     # match: plot PCA of matched cases /subjects
     elif type == "match":
 
         # Import PCA 
         PCA = pd.read_csv(settings['file']['PCA_matched'], header = None, delim_whitespace = True)
-        PCA.columns = ['IID', 'FID'] + ['PC' + str(x) for x in range(1,21)]
+        PCA.columns = ['FID', 'IID'] + ['PC' + str(x) for x in range(1,21)]
 
         # Import matched pheno
         pheno = pd.read_csv(settings['file']['pheno_matched'], sep = ' ', header = None)
-        pheno.columns = ['IID', 'FID', 'pheno']
-        pheno['IID']=pheno['IID'].astype(object)
+        pheno.columns = ['FID', 'IID', 'pheno']
+        pheno['FID']=pheno['FID'].astype(object)
 
     # Merge with PCA
-    PCA = pd.merge(PCA, pheno, on='IID')
+    PCA = pd.merge(PCA, pheno, on='FID')
 
     # Plot PCs
     Ncases = PCA[PCA.pheno.eq(1)].shape[0]
@@ -175,9 +175,9 @@ def patientMatching(settings):
 
     # Get PCs, cases and controls
     PCA = pd.read_csv(settings['file']['PCA_eigenvec'], header = None, delim_whitespace = True)
-    PCA.columns = ['IID', 'FID'] + ['PC' + str(x) for x in range(1,21)]
+    PCA.columns = ['FID', 'IID'] + ['PC' + str(x) for x in range(1,21)]
     pheno = pheno = pd.read_csv(settings['file']['pheno'], sep = ' ', header = None)
-    pheno.columns = ['IID', 'FID', 'pheno']
+    pheno.columns = ['FID', 'IID', 'pheno']
     cases = pheno[pheno['pheno'] == 1]
     controls = pheno[pheno['pheno'] == 0]
 
@@ -186,22 +186,22 @@ def patientMatching(settings):
 
     # For each case, compute euclidean distance
     matched_controls = pd.DataFrame()
-    for idx, (IID, FID) in enumerate(zip(cases['IID'], cases['FID'])):
+    for idx, (FID, IID) in enumerate(zip(cases['FID'], cases['IID'])):
 
         # Print
         print("Matching subject {0} of {1}".format(idx, cases.shape[0]-1), end='\r', flush=True)
 
         # Get the index and PCs of the case. Store.
-        PC_case = PCA[PCA.IID.eq(IID) & PCA.FID.eq(FID)].drop(['IID', 'FID'], axis = 1)
+        PC_case = PCA[PCA.FID.eq(FID) & PCA.IID.eq(IID)].drop(['FID', 'IID'], axis = 1)
 
         # Compute euclidean distance against all controls 
         patEuDist = defaultdict(list)
-        for IID_ctrl, FID_ctrl in zip(controls['IID'], controls['FID']):
+        for FID_ctrl, IID_ctrl in zip(controls['FID'], controls['IID']):
 
             # Get controls PCs and compute euclidean distance
-            PC_ctrl = PCA[PCA.IID.eq(IID_ctrl) & PCA.FID.eq(FID_ctrl)].drop(['IID', 'FID'], axis = 1) 
-            patEuDist['IID_case'].append(IID); patEuDist['FID_case'].append(FID)
-            patEuDist['IID_control'].append(IID_ctrl); patEuDist['FID_control'].append(FID_ctrl)
+            PC_ctrl = PCA[PCA.FID.eq(FID_ctrl) & PCA.IID.eq(IID_ctrl)].drop(['FID', 'IID'], axis = 1) 
+            patEuDist['FID_case'].append(FID); patEuDist['IID_case'].append(IID)
+            patEuDist['FID_control'].append(FID_ctrl); patEuDist['IID_control'].append(IID_ctrl)
             patEuDist['dist'].append(euclidean(PC_case, PC_ctrl))
 
         # Sort DataFrame
@@ -209,7 +209,7 @@ def patientMatching(settings):
         patEuDist= patEuDist.sort_values(by = "dist",  ascending=True)
 
         # Get #ratio# of matched controls and append to DataFrame
-        matched_controls = matched_controls.append(patEuDist[['IID_control','FID_control']][0:ratio])
+        matched_controls = matched_controls.append(patEuDist[['FID_control','IID_control']][0:ratio])
 
     # Drop duplicated and append pheno
     matched_controls = matched_controls.drop_duplicates()
@@ -217,7 +217,7 @@ def patientMatching(settings):
 
     # Create patient list
     patList = matched_controls
-    patList.columns = ['IID', 'FID', 'pheno']
+    patList.columns = ['FID', 'IID', 'pheno']
     patList = patList.append(cases)
         
     # Write patient list to csv file 
@@ -263,7 +263,7 @@ def main():
     plotPCA(settings, type = "match")
 
     # Perform association analysis - logistic regression
-    
+
     
 
 if __name__ == "__main__":
