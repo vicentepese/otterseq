@@ -109,8 +109,8 @@ def QC(settings):
     # Check number of cases and controls
     pheno = pd.read_csv(settings['file']['pheno'], sep = ' ', header = None)
     pheno.columns = ['FID', 'IID', 'pheno']
-    cases = pheno[pheno['pheno'] == 1]
-    controls = pheno[pheno['pheno'] == 0]
+    cases = pheno[pheno.pheno.eq(2)]
+    controls = pheno[pheno.pheno.eq(1)]
     case_count = len([subj for subj in high_IBD if subj in cases['FID']])
     control_count = len([subj for subj in high_IBD if subj in controls['FID']])
     print('Number of cases to be excluded by IBD: ' + str(case_count))
@@ -161,8 +161,8 @@ def plotPCA(settings, type = "batch"):
     PCA = pd.merge(PCA, pheno, on='FID')
 
     # Plot PCs
-    Ncases = PCA[PCA.pheno.eq(1)].shape[0]
-    Ncontrols = PCA[PCA.pheno.eq(0)].shape[0]
+    Ncases = PCA[PCA.pheno.eq(2)].shape[0]
+    Ncontrols = PCA[PCA.pheno.eq(1)].shape[0]
     sns.set_style()
     ax = sns.relplot(data=PCA, x = 'PC1', y = 'PC2', hue = "pheno")
     ax.set(xlabel = "PC1", ylabel = "PC2", title = "PCA -- Cases: " + str(Ncases) + " // Controls " + str(Ncontrols))
@@ -178,8 +178,8 @@ def patientMatching(settings):
     PCA.columns = ['FID', 'IID'] + ['PC' + str(x) for x in range(1,21)]
     pheno = pheno = pd.read_csv(settings['file']['pheno'], sep = ' ', header = None)
     pheno.columns = ['FID', 'IID', 'pheno']
-    cases = pheno[pheno['pheno'] == 1]
-    controls = pheno[pheno['pheno'] == 0]
+    cases = pheno[pheno.pheno.eq(2)]
+    controls = pheno[pheno.pheno.eq(1)]
 
     # Get matching patients ratio
     ratio = settings['ControlCaseRatio']
@@ -213,7 +213,7 @@ def patientMatching(settings):
 
     # Drop duplicated and append pheno
     matched_controls = matched_controls.drop_duplicates()
-    matched_controls['pheno'] = [0]*matched_controls.shape[0]
+    matched_controls['pheno'] = [1]*matched_controls.shape[0]
 
     # Create patient list
     patList = matched_controls
@@ -224,7 +224,7 @@ def patientMatching(settings):
     patList.to_csv(settings['file']['pheno_matched'], sep = ' ', header = None, index = False)
 
     # Print 
-    print ("Cases successfully matched. Matched controls: " +  str(patList[patList.pheno == 0].shape[0]))
+    print ("Cases successfully matched. Matched controls: " +  str(patList[patList.pheno.eq(1)].shape[0]))
 
 def main():
 
