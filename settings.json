@@ -43,7 +43,8 @@
         "mergeFiles.sh":"sh_scripts/mergeFiles.sh",
         "IBD.sh":"sh_scripts/IBD.sh",
         "pca.sh":"sh_scripts/pca.sh",
-        "qc.sh":"sh_scripts/qc.sh"
+        "qc.sh":"sh_scripts/qc.sh",
+        "logistic_regression.sh":"sh_scripts/logistic_regression.sh",
     },
 
     "IBD_threshold":0.2,

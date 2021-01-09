@@ -226,6 +226,14 @@ def patientMatching(settings):
     # Print 
     print ("Cases successfully matched. Matched controls: " +  str(patList[patList.pheno.eq(1)].shape[0]))
 
+def logistic_regression(settings):
+
+    # Run logistic regression 
+    print ("Computing logistic regression")
+    subprocess.call("sbatch " + settings['sh_script']["logistic_regression"], shell=True)
+    print("Logistic regression successfully computed")
+
+    
 def main():
 
     # Open settings
