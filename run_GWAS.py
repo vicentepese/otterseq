@@ -133,24 +133,20 @@ def computePCA(settings):
 
 def plotPCA(settings, type = "batch"):
 
+    # Import PCA 
+    PCA = pd.read_csv(settings['file']['PCA_eigenvec'], header = None, delim_whitespace = True)
+    PCA.columns = ['FID', 'IID'] + ['PC' + str(x) for x in range(1,21)]
+
     # Merge with pheno -- batch: study batch biases
     if type == "batch":
 
-        # Impport PCA
-        PCA = pd.read_csv(settings['file']['PCA_eigenvec'], header = None, delim_whitespace = True)
-        PCA.columns = ['FID', 'IID'] + ['PC' + str(x) for x in range(1,21)]
-
         # Import pheno 
-        pheno = pd.read_csv(settings['file']['pheno'], sep = ' ', header = None)
+        pheno = pd.read_csv(settings['file']['pheno'], sep = '\t', header = None)
         pheno.columns = ['FID', 'IID', 'pheno']
         pheno['FID']=pheno['FID'].astype(object)
 
     # match: plot PCA of matched cases /subjects
     elif type == "match":
-
-        # Import PCA 
-        PCA = pd.read_csv(settings['file']['PCA_matched'], header = None, delim_whitespace = True)
-        PCA.columns = ['FID', 'IID'] + ['PC' + str(x) for x in range(1,21)]
 
         # Import matched pheno
         pheno = pd.read_csv(settings['file']['pheno_matched'], sep = ' ', header = None)
@@ -233,7 +229,7 @@ def logistic_regression(settings):
     subprocess.call("sbatch " + settings['sh_script']["logistic_regression"], shell=True)
     print("Logistic regression successfully computed")
 
-    
+
 def main():
 
     # Open settings
@@ -252,8 +248,8 @@ def main():
     # Get list of common SNPs across files 
     get_SNP(settings, path = settings['directory']['GWAS_binaries'])
 
-    # # Merge files based on common SNPs
-    # mergeFiles(settings)
+    # Merge files based on common SNPs
+    mergeFiles(settings)
 
     # Quality control (QC) + IBD filtering
     QC(settings)
@@ -271,7 +267,7 @@ def main():
     plotPCA(settings, type = "match")
 
     # Perform association analysis - logistic regression
-
+    
     
 
 if __name__ == "__main__":
