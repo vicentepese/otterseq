@@ -19,8 +19,8 @@ plink --bfile $GWASDATA --list-duplicate-vars suppress-first \
 awk '{print $4}' temp.dupvar > $DupSNPs
 rm -r temp*
 
-# Parse duplicated  IIDs
-awk 'a[$1]++{$1=$1" "$1; print $1}' $GWASDATA.fam > $DupIIDs
+# Parse duplicated  FIDs
+awk '{seen[$1,$2]++}' $GWASDATA.fam > $DupIIDs
 
 # Perform Quality control - Remove duplicated variants
 plink --bfile $GWASDATA --remove $IBD_ID --exclude $DupSNPs\

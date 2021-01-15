@@ -29,10 +29,10 @@ def get_SNP(settings, path):
 
     # Initialize
     totalSNPs = list()
-    SNPs = list()
 
     # Geet SNPs
     for file in files:
+        SNPs = list()
         print("Parsing SNPs from " + file)
         with open(join(path, file), 'r') as inFile:
             for row in inFile:
