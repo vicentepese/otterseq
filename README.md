@@ -49,3 +49,4 @@ Non-standaradized, write about it
 - [X] Current version includes no pheno -- maybe allow option instead of list?
 - [ ] Remove content of folders in each iteration automatically?
 - [X] PCA cannot be performed if "," are in the SNPS ids 
+- [ ] Does not support flip in merge
