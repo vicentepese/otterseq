@@ -9,11 +9,25 @@ COMMONSNPS=$(jq -r '.file.commonSNPs' settings.json)
 # Get list of files 
 BINFILES=$(find $GWASBIN -iname '*.bim' -type f -exec sh -c 'printf "%s\n" "${0%.*}"' {} ';'| head -1)
 
-# Merge and create temporal file
-plink --bfile $BINFILES \
+# Get number of files to merge 
+NUMFILES=$(awk 'END{print NR}' $MERGELIST)
+
+# If more than one dataset, merge and filter - else, filter
+if [ $NUMFILES -lt 1 ];
+then 
+    plink --bfile $BINFILES \
     --merge-list $MERGELIST \
     --extract $COMMONSNPS \
     --allow-no-sex \
     --memory 4626791360 \
     --make-bed \
     --out $GWASMERGE > $GWASMERGE
+else
+    plink --bfile $BINFILES \
+    --extract $COMMONSNPS \
+    --allow-no-sex \
+    --memory 4626791360 \
+    --make-bed \
+    --out $GWASMERGE > $GWASMERGE
+fi
+
