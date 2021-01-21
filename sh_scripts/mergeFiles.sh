@@ -14,6 +14,6 @@ plink --bfile $BINFILES \
     --merge-list $MERGELIST \
     --extract $COMMONSNPS \
     --allow-no-sex \
-    --memory 4604003776 \
+    --memory 4626791360 \
     --make-bed \
     --out $GWASMERGE > $GWASMERGE

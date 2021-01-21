@@ -22,17 +22,16 @@ rm -r temp*
 # Parse duplicated  FIDs
 awk '{seen[$1,$2]++}' $GWASDATA.fam > $DupIIDs
 
+# Concat IBD remove and DupSNPS
+cp $IBD_ID temp_remove
+awk '{print $0}' $DupIIDs >> temp_remove
+
 # Perform Quality control - Remove duplicated variants
-plink --bfile $GWASDATA --remove $IBD_ID --exclude $DupSNPs\
+plink --bfile $GWASDATA --remove temp_remove --exclude $DupSNPs\
     --allow-no-sex \
     --maf $MAF --geno $GENOMISS --mind $PHENOMISS \
-    --make-bed --out gwastemp > gwastemp
-
-# Perform Quality Control - Remove duplicated IIDs
-plink --bfile gwastemp --remove $DupIIDs \
-    --allow-no-sex \
     --make-bed --out gwastempFilt > gwastempFilt
-rm -r gwastemp.*
+rm temp_remove
 
 # Parse triplicated variants / multiallelic variants
 plink --bfile gwastempFilt --list-duplicate-vars\

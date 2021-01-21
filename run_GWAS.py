@@ -141,7 +141,7 @@ def plotPCA(settings, type = "batch"):
     if type == "batch":
 
         # Import pheno 
-        pheno = pd.read_csv(settings['file']['pheno'], sep = '\t', header = None)
+        pheno = pd.read_csv(settings['file']['pheno'], sep = ' ', header = None)
         pheno.columns = ['FID', 'IID', 'pheno']
         pheno['FID']=pheno['FID'].astype(object)
 
@@ -198,7 +198,7 @@ def patientMatching(settings):
             PC_ctrl = PCA[PCA.FID.eq(FID_ctrl) & PCA.IID.eq(IID_ctrl)].drop(['FID', 'IID'], axis = 1) 
             patEuDist['FID_case'].append(FID); patEuDist['IID_case'].append(IID)
             patEuDist['FID_control'].append(FID_ctrl); patEuDist['IID_control'].append(IID_ctrl)
-            patEuDist['dist'].append(euclidean(PC_case, PC_ctrl))
+            patEuDist['dist'].append(euclidean(PC_case[['PC1','PC2']], PC_ctrl[['PC1','PC2']]))
 
         # Sort DataFrame
         patEuDist = pd.DataFrame(patEuDist)
@@ -208,7 +208,7 @@ def patientMatching(settings):
         matched_controls = matched_controls.append(patEuDist[['FID_control','IID_control']][0:ratio])
 
     # Drop duplicated and append pheno
-    matched_controls = matched_controls.drop_duplicates()
+    matched_controls = matched_controls.drop_duplicates(subset = ["FID_control", "IID_control"])
     matched_controls['pheno'] = [1]*matched_controls.shape[0]
 
     # Create patient list
@@ -241,15 +241,15 @@ def main():
 
     # Binarize GWAS files
     if (not os.listdir(settings['directory']['GWAS_binaries'])):
-        binarizeFiles(settings)
+        binarizeFiles(settings) 
     else:
         print("Files already binarized")
 
     # Get list of common SNPs across files 
     get_SNP(settings, path = settings['directory']['GWAS_binaries'])
 
-    # Merge files based on common SNPs
-    mergeFiles(settings)
+    # # Merge files based on common SNPs
+    # mergeFiles(settings)
 
     # Quality control (QC) + IBD filtering
     QC(settings)

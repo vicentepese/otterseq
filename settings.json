@@ -51,6 +51,6 @@
     "phenomiss":0.15,
     "genomiss":0.1,
     "maf":0.05,
-    "ControlCaseRatio":50
+    "ControlCaseRatio":10
 
 }
