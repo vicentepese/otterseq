@@ -229,6 +229,36 @@ def logistic_regression(settings):
     subprocess.call("sbatch " + settings['sh_script']["logistic_regression"], shell=True)
     print("Logistic regression successfully computed")
 
+def manhattan_plot(settings):
+
+    # Import logistic association
+    assoc_data = pd.read_csv(settings['file']['logistic_regression'], delim_whitespace = True)
+
+    # Get data variables 
+    pvals = assoc_data['P']
+    x = range(len(pvals))
+    Chr = assoc_data['CHR']
+    colors = []
+    flag = 1
+
+    # Create color array
+    for c in np.unique(Chr):
+        l = assoc_data[assoc_data.CHR.eq(c)].shape[0]
+        if flag == 1:
+            colors = colors + ['#F8766D']*l
+        else:
+            colors = colors + ['00BFC4']*l
+        flag = 1
+
+    # Create data frame 
+    data_plot = pd.DataFrame({"pval":-np.log10(pvals), "pos":x, "colors":colors, "chr":Chr})
+
+    # Plot 
+    plt.figure()
+    sns.scatterplot(x = "pos", y = "pval", hue="Chr", data = data_plot)
+    
+
+
 
 def main():
 
@@ -248,8 +278,8 @@ def main():
     # Get list of common SNPs across files 
     get_SNP(settings, path = settings['directory']['GWAS_binaries'])
 
-    # # Merge files based on common SNPs
-    # mergeFiles(settings)
+    # Merge files based on common SNPs
+    mergeFiles(settings)
 
     # Quality control (QC) + IBD filtering
     QC(settings)
@@ -267,8 +297,10 @@ def main():
     plotPCA(settings, type = "match")
 
     # Perform association analysis - logistic regression
-    
-    
+    logistic_regression(settings)
+
+    # Manhattan plot
+    manhattan_plot(settings)
 
 if __name__ == "__main__":
     

@@ -14,10 +14,11 @@ setwd("~/Documents/GWAS_pipeline")
 settings <- jsonlite::fromJSON('settings.json')
 
 # Import association file 
-assoc.data <- read.table('./Resources/filtLGI1.assoc.logistic', header = TRUE, sep = '')
+assoc.data <- read.table(settings$file$logistic_regression, header = TRUE, sep = '')
 assoc.data <- assoc.data[which(assoc.data$TEST == 'ADD'),]
 
 ######### PLOT ###########
+
 # Data table variables
 pvals <- assoc.data$P
 x <- c(1:length(pvals))

@@ -28,7 +28,8 @@
         "pheno":"Resources/pheno.txt",
         "pheno_matched":"Resources/pheno_matched.txt",
         "HLA_calls":"Outputs/HLA_Imputation/HLA_LGI1.csv",
-        "HLA_probs":"Outputs/HLA_Imputation/HLA_LGI1_probs.csv"
+        "HLA_probs":"Outputs/HLA_Imputation/HLA_LGI1_probs.csv",
+        "logistic_regression":"Outputs/GWAS/LGI1_GWAS.assoc.logistic"
     },
 
     "plinkFiles":{
