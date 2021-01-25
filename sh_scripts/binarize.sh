@@ -1,5 +1,13 @@
 #!/bin/bash 
 
+###################################################################
+#Script Name	: binarize.sh                                                                                            
+#Description	: Converts .ped to .bed                                                                              
+#Args           : None                                                                                           
+#Author       	: Vicente Peris Sempere                                                
+#Email         	: vipese@stanford.edu                                        
+###################################################################
+
 # Get directory and files
 MAINDIR=$(pwd)
 GWASDIR=$(jq -r '.directory.GWAS' settings.json)

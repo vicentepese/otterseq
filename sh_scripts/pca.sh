@@ -1,5 +1,13 @@
 #!/bin/bash
 
+###################################################################
+#Script Name	: binarize.sh                                                                                            
+#Description	: Computes Principal Component Analysis of .bed files                                                                          
+#Args           : None                                                                                           
+#Author       	: Vicente Peris Sempere                                                
+#Email         	: vipese@stanford.edu                                        
+###################################################################
+
 # Read variables from settings
 PHENOMISS=$(jq -r '.phenomiss' settings.json)
 GENOMISS=$(jq -r '.genomiss' settings.json)

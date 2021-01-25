@@ -1,5 +1,13 @@
 #!/bin/bash 
 
+###################################################################
+#Script Name	: binarize.sh                                                                                            
+#Description	: Merges all .bed files                                                                         
+#Args           : None                                                                                           
+#Author       	: Vicente Peris Sempere                                                
+#Email         	: vipese@stanford.edu                                        
+###################################################################
+
 # Get directories, files and resources
 GWASBIN=$(jq -r '.directory.GWAS_binaries' settings.json)
 GWAS=$(jq -r '.plinkFiles.GWAS' settings.json)

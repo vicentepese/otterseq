@@ -1,5 +1,13 @@
 #!/bin/bash
 
+###################################################################
+#Script Name	: binarize.sh                                                                                            
+#Description	: Computes a logistic regression through PLINK                                                                       
+#Args           : None                                                                                           
+#Author       	: Vicente Peris Sempere                                                
+#Email         	: vipese@stanford.edu                                        
+###################################################################
+
 # Read settings 
 GWASFILE=$(jq -r '.plinkFiles.GWASQC' settings.json)
 PHENOFILE=$(jq -r '.file.pheno_matched' settings.json)

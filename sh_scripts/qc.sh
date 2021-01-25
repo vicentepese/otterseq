@@ -1,5 +1,13 @@
 #!bin/bash 
 
+###################################################################
+#Script Name	: binarize.sh                                                                                            
+#Description	: Perform Quality Control of .bed files through PLINK                                                                      
+#Args           : None                                                                                           
+#Author       	: Vicente Peris Sempere                                                
+#Email         	: vipese@stanford.edu                                        
+###################################################################
+
 # Read from settings
     # Plink files
 GWASDATA=$(jq -r '.plinkFiles.GWAS' settings.json)
