@@ -3,3 +3,4 @@ Resources/
 Outputs/
 *.vscode/
 .Rhistory/
+.vs
