@@ -32,7 +32,7 @@ __status__ = "Finalized"
 
 
 def binarizeFiles(settings):
-    """ Convert .ped to .bed files
+    """ Convert .ped to .bed files through PLINK
     Input: 
         - settings: settings JSON file
 
@@ -51,6 +51,8 @@ def get_SNP(settings):
     """ Get common SNPs binarized files
     Input:
         - settings: settings JSON file 
+    Output:
+        - Common SNPs text file
     """
 
     print("Parsing common SNPs")
@@ -88,7 +90,14 @@ def get_SNP(settings):
     print("Common SNPs stored in " + settings['file']['commonSNPs'])
 
 def mergeFiles(settings):
-    # Creates a merge file and uses it to merge files in GWAS_binaries
+    """Creates merge file text and merges files through PLINK including 
+    common SNPs only.
+    Input: 
+        - settings: settings JSON file
+
+    Output:
+        - Merged files 
+    """
 
     # Get control files
     filePath = settings['directory']['GWAS_binaries']
@@ -107,8 +116,13 @@ def mergeFiles(settings):
     print('Files successfully merged') 
 
 def QC(settings):
-    # This function computes and IBD computation and creates 
-    # A list of subjects to remove removeIDs.txt in Resources 
+    """Quality Control: computes Inheritance By Descendance, and removes 
+    subjetcs based on IBD filter, MAF, missingnes and duplicates throug PLINK.
+    Inputs:
+        - settings: settings JSON file
+    Outputs:
+        - QCed files through PLINK
+    """
 
     # Run IBD computation
     print('Computing IBD')
@@ -157,6 +171,12 @@ def QC(settings):
     subprocess.call(['bash', settings['sh_script']['qc.sh']])
 
 def computePCA(settings):
+    """Computes PCA removing HLA region 
+    Inputs:
+        - settings: settings JSON file 
+    Outputs:
+        - Principal Components (PCs)
+    """
 
     # Compute PCA
     print("Compute PCA")
@@ -164,6 +184,13 @@ def computePCA(settings):
     print("PCA computed. Ploting PCs")
 
 def plotPCA(settings, type = "batch"):
+    """ Plots PCA. If type is batch, uses pheno provided. If type is match, uses matched subjects
+    Inputs: 
+        - settings: settings JSON file 
+        - type: "batch", "match". Specifies the type of plot to be computed (matched, or unmatched)
+    Outputs:
+        - PCA plot
+    """
 
     # Import PCA 
     PCA = pd.read_csv(settings['file']['PCA_eigenvec'], header = None, delim_whitespace = True)
@@ -197,6 +224,13 @@ def plotPCA(settings, type = "batch"):
     plt.show()
 
 def patientMatching(settings):
+    """Matches cases with its closes controls based on provided ratio, and Euclidian Distance
+    of PCs.
+    Inputs:
+        - settings: settings JSON file 
+    Outputs:
+        - File with list of cases and controls matched
+    """
 
     # Perform patient matching
     print("Computing patient matching as the Euclidean distance between each case and control")
@@ -255,44 +289,22 @@ def patientMatching(settings):
     print ("Cases successfully matched. Matched controls: " +  str(patList[patList.pheno.eq(1)].shape[0]))
 
 def logistic_regression(settings):
+    """ Computes the logistic regression of QCed files and matched cases
+    Inputs:
+        - settings: settings JSON file 
+    Outputs: 
+        - PLINK file with logistic regression results
+    """
 
     # Run logistic regression 
     print ("Computing logistic regression")
     subprocess.call("sbatch " + settings['sh_script']["logistic_regression"], shell=True)
     print("Logistic regression successfully computed")
 
-def manhattan_plot(settings):
-
-    # Import logistic association
-    assoc_data = pd.read_csv(settings['file']['logistic_regression'], delim_whitespace = True)
-
-    # Get data variables 
-    pvals = assoc_data['P']
-    x = range(len(pvals))
-    Chr = assoc_data['CHR']
-    colors = []
-    flag = 1
-
-    # Create color array
-    for c in np.unique(Chr):
-        l = assoc_data[assoc_data.CHR.eq(c)].shape[0]
-        if flag == 1:
-            colors = colors + ['#F8766D']*l
-        else:
-                colors = colors + ['00BFC4']*l
-        flag = 1
-
-    # Create data frame 
-    data_plot = pd.DataFrame({"pval":-np.log10(pvals), "pos":x, "colors":colors, "chr":Chr})
-
-    # Plot 
-    plt.figure()
-    sns.scatterplot(x = "pos", y = "pval", hue="Chr", data = data_plot)
-    
-
-
 
 def main():
+    """ Main function of the script. 
+    """
 
     # Open settings
     with open('settings.json', 'r') as inFile:
