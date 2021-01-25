@@ -4,6 +4,7 @@
     # Plink files
 GWASDATA=$(jq -r '.plinkFiles.GWAS' settings.json)
 GWASDATAQC=$(jq -r '.plinkFiles.GWASQC' settings.json)
+PREFIX=$(jq -r '.plinkFiles.prefix' settings.json)
     # Variables for QC
 IBD_ID=$(jq -r '.file.excludeID_IBD' settings.json)
 PHENOMISS=$(jq -r '.phenomiss' settings.json)
@@ -14,20 +15,20 @@ DupIIDs=$(jq -r '.file.DupIIDs' settings.json)
 TripSNPS=$(jq -r '.file.TripSNPs' settings.json)
 
 # Parse duplicate variants (based on position and allele codes)
-plink --bfile $GWASDATA --list-duplicate-vars suppress-first \
+plink --bfile ${GWASDATA}${PREFIX} --list-duplicate-vars suppress-first \
     --allow-no-sex --out temp > temp
 awk '{print $4}' temp.dupvar > $DupSNPs
 rm -r temp*
 
 # Parse duplicated  FIDs
-awk '{seen[$1,$2]++}' $GWASDATA.fam > $DupIIDs
+awk '{seen[$1,$2]++}' ${GWASDATA}${PREFIX}.fam > $DupIIDs
 
 # Concat IBD remove and DupSNPS
 cp $IBD_ID temp_remove
 awk '{print $0}' $DupIIDs >> temp_remove
 
 # Perform Quality control - Remove duplicated variants
-plink --bfile $GWASDATA --remove temp_remove --exclude $DupSNPs\
+plink --bfile ${GWASDATA}${PREFIX} --remove temp_remove --exclude $DupSNPs\
     --allow-no-sex \
     --maf $MAF --geno $GENOMISS --mind $PHENOMISS \
     --make-bed --out gwastempFilt > gwastempFilt
@@ -42,11 +43,11 @@ rm -r temp*
 # Remove triplicated / multiallelic variants
 plink --bfile gwastempFilt --exclude $TripSNPS\
     --allow-no-sex \
-    --make-bed --out $GWASDATAQC >> $GWASDATAQC
+    --make-bed --out ${GWASDATAQC}${PREFIX} >>${GWASDATAQC}${PREFIX}
 rm -r gwastemp*
 
 # Clean .bim file to remove commas (PCA)
 awk '{
     gsub(/\,/, ":", $2); print $0
-    }' $GWASDATAQC.bim > temp.bim
-mv temp.bim $GWASDATAQC.bim
+    }' ${GWASDATAQC}${PREFIX}.bim > temp.bim
+mv temp.bim ${GWASDATAQC}${PREFIX}.bim

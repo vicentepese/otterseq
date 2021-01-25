@@ -14,7 +14,7 @@ setwd("~/Documents/GWAS_pipeline")
 settings <- jsonlite::fromJSON('settings.json')
 
 # Import association file 
-assoc.data <- read.table(paste0(settings$directory$GWAS_out, "LGI1_GWAS.assoc.logistic"), header = TRUE, sep = '')
+assoc.data <- read.table(paste0(settings$directory$GWAS_out,settings$plinkFiles$prefix ,".assoc.logistic"), header = TRUE, sep = '')
 assoc.data <- assoc.data[which(assoc.data$TEST == 'ADD'),]
 
 ######### PLOT ###########

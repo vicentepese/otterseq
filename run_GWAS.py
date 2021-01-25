@@ -142,7 +142,7 @@ def QC(settings):
        
     # Get list of patients and cases (remove unknown pheno)
     patientList = list()
-    with open(settings['plinkFiles']['GWAS'] + '.fam','r') as inFile:
+    with open(settings['plinkFiles']['GWAS'] + settings['plinkFiles']['GWAS'] +'.fam','r') as inFile:
         for row in inFile:
             row = row.split()
             pheno = int(row[5].split('\n')[0])

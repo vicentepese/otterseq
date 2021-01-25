@@ -2,9 +2,10 @@
 
 # Get directories, files and resources
 GWASBIN=$(jq -r '.directory.GWAS_binaries' settings.json)
-GWASMERGE=$(jq -r '.plinkFiles.GWAS' settings.json)
+GWAS=$(jq -r '.plinkFiles.GWAS' settings.json)
 MERGELIST=$(jq -r '.file.mergeList' settings.json)
 COMMONSNPS=$(jq -r '.file.commonSNPs' settings.json)
+PREFIX=$(jq -r '.plinkFiles.prefix' settings.json)
 
 # Get list of files 
 BINFILES=$(find $GWASBIN -iname '*.bim' -type f -exec sh -c 'printf "%s\n" "${0%.*}"' {} ';'| head -1)
@@ -21,10 +22,10 @@ then
     --allow-no-sex \
     --memory 4626791360 \
     --make-bed \
-    --out $GWASMERGE > $GWASMERGE
+    --out ${GWAS}$PREFIX > ${GWAS}$PREFIX
 else
-    cp $BINFILES.bed $GWASMERGE.bed
-    cp $BINFILES.fam $GWASMERGE.fam
-    cp $BINFILES.bim $GWASMERGE.bim
+    cp $BINFILES.bed ${GWAS}$PREFIX.bed
+    cp $BINFILES.fam ${GWAS}$PREFIX.fam
+    cp $BINFILES.bim ${GWAS}$PREFIX.bim
 fi
 

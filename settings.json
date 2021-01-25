@@ -29,8 +29,8 @@
 
     "plinkFiles":{
         "prefix":"LGI1",
-        "GWAS":"Data/LGI1_GWAS",
-        "GWASQC":"Data/LGI1_QC",
+        "GWAS":"Data/",
+        "GWASQC":"Data/",
         "PCA":"Resources/PCA",
         "PCA_matched":"Resources/PCA_matched"
     },
