@@ -1,3 +1,15 @@
+#!/usr/bin/env python
+"""Performs GWAS: Merge, Quality Control, PCA, Case matching, Logistic regression.
+
+- Merge: from multiple binary .ped files, merge files using only common SNPs
+- Quality Control (QC): filter based on minimum allele frquency, and missing genotype 
+    and phenotype. Removes duplicated variants and IIDs/FIDs.
+- PCA: Principal Component Analysis - verifies that there is no batch biases.
+- Case Matching: Matches cases with controls based on a predefined ratio, 
+    using PCs and Euclidian distance. 
+- Logistic Regression: Computes a logistic regression controling for PC
+"""
+
 import numpy as np
 import subprocess
 import json
@@ -10,8 +22,23 @@ from scipy.spatial.distance import euclidean
 import seaborn as sns
 import pandas as pd
 
+__author__ = "Vicente Peris Sempere"
+__credits__ = ["Vicente Peris Sempere"]
+__license__ = "GPL"
+__version__ = "3.0"
+__maintainer__ = "Vicente Peris Sempere"
+__email__ = "vipese@stanford.edu"
+__status__ = "Finalized"
+
 
 def binarizeFiles(settings):
+    """ Convert .ped to .bed files
+    Input: 
+        - settings: settings JSON file
+
+    Output: 
+        - Binarized files
+    """
 
     # Print 
     print("Binarizing files: \n")
@@ -21,6 +48,11 @@ def binarizeFiles(settings):
     subprocess.call(['bash', settings['sh_script']['binarize.sh']])
 
 def get_SNP(settings, path):
+    """ Get common SNPs binarized files
+    Input:
+        - settings: settings JSON file 
+        - path:
+    """
 
     print("Parsing common SNPs")
 
