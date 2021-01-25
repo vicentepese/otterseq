@@ -343,8 +343,6 @@ def main():
     # Perform association analysis - logistic regression
     logistic_regression(settings)
 
-    # Manhattan plot
-    manhattan_plot(settings)
 
 if __name__ == "__main__":
     
