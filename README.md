@@ -79,12 +79,9 @@ This pipeline runs on a *settings*-based logic, and therefore all paths and cons
 * ***maf***: Minimum Allele Frequency threshold.
 * ***ControlCaseRatio***: Number of controls per case to match.
 
-# Settings
+## Warnings
+The relative or full paths in `settings.json` must end with a slash ("/") to allow correct functionment of the pipeline.
 
-## Folders
-_Data_: Master folder containing all data utilized in the project. 
-_Data/GWAS_: Folder contaning non-binarized GWAS files. The pipeline will binarize the data. Files can be added alread binarized if decided.
-_Data/GWAS\_binaries_: Folder containing binarized GWAS files. Files can be directly added into the folder, or in _Data/GWAS_ to be binarized. 
 
 ## Dataset modifications
 1. Removed line 194 and 289, COPY
