@@ -31,20 +31,55 @@ The first step taken by the pipeline is the binarization of `.ped` files utilizi
 The pipeline allows the input of multiple datasets, by mergeing them with their common SNPs. This step is skipped if only one dataset is provided. 
 
 ### Quality Control 
-Quality Control (QC) filters out duplicated, and triplicated variants, and variants with los Minimum Allele Frequency (MAF) as provided in the `settings` file. Duplicated subjects based on FID and IID, ans subjects with high missingness of genotype as specified in `settings` are also removed. 
+Quality Control (QC) filters out duplicated, and triplicated variants, and variants with los Minimum Allele Frequency (MAF) as provided in the `settings.json` file. Duplicated subjects based on FID and IID, ans subjects with high missingness of genotype as specified in `settings.json` are also removed. 
 
 ### Principal Component Analysis
 Principal Component Analysis (PCA) is a dimensionality reduction operation that provides directions(Principal Components, PCs) of maximum variability (usually due to batches and/or ethnicity). It will be used to verify the lack of biases to due differences in bathces, and in the subsequent case-control matching step. 
 
 ### Case-Control Matching 
-To improve statistical power and significance validity, cases are *matched* to a number of controls as provided in `settings`. Matching process takes each case's PCs and computes the Euclidian distance with all controls, selecting the closest ones - that is, the more genetically similar controls are selected, therefore reducing variability.
+To improve statistical power and significance validity, cases are *matched* to a number of controls as provided in `settings.json`. Matching process takes each case's PCs and computes the Euclidian distance with all controls, selecting the closest ones - that is, the more genetically similar controls are selected, therefore reducing variability within cases.
 
 ### Logistic regression
-A logistic regression is fit for each variant, controlling for PCs.
+A logistic regression is fit for each variant, controlling for PCs and therefore accounting for variability between case-control matching groups.
 
+## Additional functions
+Two additional functions have been included as part of the pipeline, although they do not form part of a GWAS.
 
-# Usage
+### `manhattanPlot.R`
+Computes a Manhattan Plot to visualize significant variants and/or genome regions of interest.
+![Manhatan Plot](GWAS.png)
 
+### `HLA_imputation.R`
+Utilizes HLA Genotype Imputation with Attribute Bagging (HIBAG) to impute the HLA types through `.bed` files - in this case, the QCed files
+
+### `submit_slurm.sh`
+Submits the pipeline to a SLURM-based computing platform. Requires modification of header.
+
+# Usage 
+To run the pipeline, please follow these this steps:
+1. Clone the repository.
+2. Fill up the `setting.json` file (refer to Settings section).
+3. Copy `.ped` files / `.bed` files to directory.
+4. Run `python run_GWAS.py` from the directory of the pipeline.
+
+## Settings
+This pipeline runs on a *settings*-based logic, and therefore all paths and constants are stored in `settings.json`. To correctly run the pipeline, please fill up/modify the following sections of `settings.json`, and leave the rest unmodified.
+* ***directory***
+  * *GWAS*: Folder containing `.ped` files.
+  * *GWAS_binaries*: Folder containing `.bed` files.
+  * *HLA_Imputation*: Folder containing HLA imputation outputs (only for `HLA_imputation.R`)
+  * *GWAS_out*: Folder contaning GWAS logistic regression output.
+* ***plinkFiles***
+  * *prefix*: 
+  * *GWAS*: 
+  * GWASQC:
+* ***IBD_threshold***:
+* ***phenomiss***:
+* ***genomiss***:
+* ***maf***:
+* ***ControlCaseRatio***:
+
+# Settings
 
 ## Folders
 _Data_: Master folder containing all data utilized in the project. 

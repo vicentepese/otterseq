@@ -85,8 +85,8 @@ for (f in file.names[2:length(file.names)]){
 }
 
 # Write 
-write.table(HLA.data, file = settings$file$HLA_calls, sep = ',', quote = FALSE, row.names = FALSE, col.names = TRUE)
-write.table(probs.data, file = settings$file$HLA_probs, sep = ',', quote = FALSE, row.names = FALSE, col.names = TRUE)
+write.table(HLA.data, file = paste0(settings$directory$HLA_Imputation, "HLA_calls.csv"), sep = ',', quote = FALSE, row.names = FALSE, col.names = TRUE)
+write.table(probs.data, file = paste0(settings$directory$HLA_Imputation, "HLA_probs.csv"), sep = ',', quote = FALSE, row.names = FALSE, col.names = TRUE)
 
 # Plot probabilities
 pl <- vector('list', ncol(probs.data)-1)

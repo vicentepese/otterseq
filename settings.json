@@ -1,11 +1,9 @@
 {
 
     "directory":{
-        "Data":"Data/",
         "GWAS":"Data/GWAS/",
         "GWAS_binaries":"Data/GWAS_binaries/",
         "sh_scripts":"sh_scripts/",
-        "Outputs":"Outputs/",
         "Resources":"Resources/",
         "HLA_Imputation":"Outputs/HLA_Imputation/",
         "GWAS_out":"Outputs/GWAS/"
@@ -27,12 +25,10 @@
         "DupIIDs":"Resources/DupIIDs",
         "pheno":"Resources/pheno.txt",
         "pheno_matched":"Resources/pheno_matched.txt",
-        "HLA_calls":"Outputs/HLA_Imputation/HLA_LGI1.csv",
-        "HLA_probs":"Outputs/HLA_Imputation/HLA_LGI1_probs.csv",
-        "logistic_regression":"Outputs/GWAS/LGI1_GWAS.assoc.logistic"
     },
 
     "plinkFiles":{
+        "prefix":"LGI1",
         "GWAS":"Data/LGI1_GWAS",
         "GWASQC":"Data/LGI1_QC",
         "PCA":"Resources/PCA",
