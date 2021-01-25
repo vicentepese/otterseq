@@ -47,16 +47,16 @@ def binarizeFiles(settings):
     # Call bash script to binarize files in Data/GWAS
     subprocess.call(['bash', settings['sh_script']['binarize.sh']])
 
-def get_SNP(settings, path):
+def get_SNP(settings):
     """ Get common SNPs binarized files
     Input:
         - settings: settings JSON file 
-        - path:
     """
 
     print("Parsing common SNPs")
 
     # Get .bim files of controls
+    path = settings['directory']['GWAS_binaries']
     files = [file for file in os.listdir(path) if isfile(join(path, file)) and '.bim' in file]
 
     # Initialize
@@ -308,7 +308,7 @@ def main():
         print("Files already binarized")
 
     # Get list of common SNPs across files 
-    get_SNP(settings, path = settings['directory']['GWAS_binaries'])
+    get_SNP(settings)
 
     # Merge files based on common SNPs
     mergeFiles(settings)
