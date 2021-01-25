@@ -30,6 +30,18 @@ The first step taken by the pipeline is the binarization of `.ped` files utilizi
 ### Merge
 The pipeline allows the input of multiple datasets, by mergeing them with their common SNPs. This step is skipped if only one dataset is provided. 
 
+### Quality Control 
+Quality Control (QC) filters out duplicated, and triplicated variants, and variants with los Minimum Allele Frequency (MAF) as provided in the `settings` file. Duplicated subjects based on FID and IID, ans subjects with high missingness of genotype as specified in `settings` are also removed. 
+
+### Principal Component Analysis
+Principal Component Analysis (PCA) is a dimensionality reduction operation that provides directions(Principal Components, PCs) of maximum variability (usually due to batches and/or ethnicity). It will be used to verify the lack of biases to due differences in bathces, and in the subsequent case-control matching step. 
+
+### Case-Control Matching 
+To improve statistical power and significance validity, cases are *matched* to a number of controls as provided in `settings`. Matching process takes each case's PCs and computes the Euclidian distance with all controls, selecting the closest ones - that is, the more genetically similar controls are selected, therefore reducing variability.
+
+### Logistic regression
+A logistic regression is fit for each variant, controlling for PCs.
+
 
 # Usage
 
