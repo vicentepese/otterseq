@@ -2,10 +2,10 @@
 GWAS pipeline 
 
 # Requirements
-Required Python version
+Required Python version:
 > Python v3.6.8 
 
-Required Python modules
+Required Python modules:
 > numpy v1.15.4 <br>
 > subprocess <br>
 > json <br>
@@ -15,7 +15,24 @@ Required Python modules
 > scipy v1.2.1 <br>
 > king v2.2.4 <br>
 
-# Steps / set settings
+# Introduction 
+A Genome Wide Association Study or GWAS aims to study the potential association of Single Nucleotide Polymorphisims (SNP or variant) with a specific disease by leveraging statistical methods and comparing healthy controls with affected cases. 
+
+This repository attempts to standardize GWASs of HLA-related diseases by providing a structured and traceable pipeline with a *settings* based logic. 
+
+# Pipeline
+
+The pipeline is composed by the following steps, in order of apperance: Binarization of `.ped` files, Merge, Quality Control, Principal Component Analysis, Case-Control Matching, and Logistic Regression Computation.
+
+### Binarization
+The first step taken by the pipeline is the binarization of `.ped` files utilizing `PLINK` - that is, converting `.ped` to `.bed`. This step can be skiped by providing binarized files directly to the pipeline.
+
+### Merge
+The pipeline allows the input of multiple datasets, by mergeing them with their common SNPs. This step is skipped if only one dataset is provided. 
+
+
+# Usage
+
 
 ## Folders
 _Data_: Master folder containing all data utilized in the project. 
@@ -29,7 +46,7 @@ _Data/GWAS\_binaries_: Folder containing binarized GWAS files. Files can be dire
 10	chr10-96521657:rs12248560-TC	115.27	96521657	A	G 
 for being biallelic)
 
-## THINGS TO CHANGE 
+# FUTURE WORK
 
 ### PREPROCESSING 
 Non-standaradized, write about it 

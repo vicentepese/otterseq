@@ -23,11 +23,8 @@ then
     --make-bed \
     --out $GWASMERGE > $GWASMERGE
 else
-    plink --bfile $BINFILES \
-    --extract $COMMONSNPS \
-    --allow-no-sex \
-    --memory 4626791360 \
-    --make-bed \
-    --out $GWASMERGE > $GWASMERGE
+    cp $BINFILES.bed $GWASMERGE.bed
+    cp $BINFILES.fam $GWASMERGE.fam
+    cp $BINFILES.bim $GWASMERGE.bim
 fi
 
