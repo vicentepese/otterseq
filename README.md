@@ -1,6 +1,3 @@
-# GWAS_pipeline
-GWAS pipeline 
-
 # Requirements
 Required Python version:
 > Python v3.6.8 
