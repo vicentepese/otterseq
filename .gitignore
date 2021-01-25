@@ -2,5 +2,5 @@ Data/
 Resources/
 Outputs/
 *.vscode/
-.Rhistory/
+.Rhistory
 .vs
