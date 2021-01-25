@@ -50,7 +50,7 @@ Computes a Manhattan Plot to visualize significant variants and/or genome region
 ![Manhatan Plot](GWAS.png)
 
 ### `HLA_imputation.R`
-Utilizes HLA Genotype Imputation with Attribute Bagging (HIBAG) to impute the HLA types through `.bed` files - in this case, the QCed files
+Utilizes HLA Genotype Imputation with Attribute Bagging (HIBAG) to impute the HLA types through `.bed` files - in this case, the QCed files. *Note:* a trained HIBAG model is necessary to run this function - if none available, please contact (Aditya Ambassi)[https://github.com/adiamb].
 
 ### `submit_slurm.sh`
 Submits the pipeline to a SLURM-based computing platform. Requires modification of header.
@@ -82,32 +82,7 @@ This pipeline runs on a *settings*-based logic, and therefore all paths and cons
 ## Warnings
 The relative or full paths in `settings.json` must end with a slash ("/") to allow correct functionment of the pipeline.
 
-
-## Dataset modifications
-1. Removed line 194 and 289, COPY
-2. Modified bim file from Oxford (removed
-10	chr10-96521657:rs12248560-AC	115.27	96521657	A	C
-10	chr10-96521657:rs12248560-TC	115.27	96521657	A	G 
-for being biallelic)
-
-# FUTURE WORK
-
-### PREPROCESSING 
-Non-standaradized, write about it 
-
-### 1000 genome imputation 
-- [X] Non-standarized, write main code (V)
-  - [X]   (i)+ make path standarized (V)
-- [X] Issue when converting from bgen to binary PED - IID is replaced by index --> fix code so that sample becomes .fam
-- [X] Create SLURM log folder to save slurm, an shape it
-- [X] Change name of SLURM logs
-- [X] Still cannot merge all binary PED files
-- [ ] Include QC there 
-
-### GWAS PIPELINE
-- [X] QC does not remove multiallelic, maybe include
-- [X] PCA having issues
-- [X] Current version includes no pheno -- maybe allow option instead of list?
+# Future work
 - [ ] Remove content of folders in each iteration automatically?
 - [X] PCA cannot be performed if "," are in the SNPS ids 
 - [ ] Does not support flip in merge
