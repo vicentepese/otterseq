@@ -65,19 +65,19 @@ To run the pipeline, please follow these this steps:
 ## Settings
 This pipeline runs on a *settings*-based logic, and therefore all paths and constants are stored in `settings.json`. To correctly run the pipeline, please fill up/modify the following sections of `settings.json`, and leave the rest unmodified.
 * ***directory***
-  * *GWAS*: Folder containing `.ped` files.
-  * *GWAS_binaries*: Folder containing `.bed` files.
-  * *HLA_Imputation*: Folder containing HLA imputation outputs (only for `HLA_imputation.R`)
-  * *GWAS_out*: Folder contaning GWAS logistic regression output.
+  * *GWAS*: Relateive/Full path to folder containing `.ped` files.
+  * *GWAS_binaries*: Relateive/Full path to folder containing `.bed` files.
+  * *HLA_Imputation*: Relateive/Full path to folder containing HLA imputation outputs (only for `HLA_imputation.R`)
+  * *GWAS_out*: Relateive/Full path to folder contaning GWAS logistic regression output.
 * ***plinkFiles***
-  * *prefix*: 
-  * *GWAS*: 
-  * GWASQC:
-* ***IBD_threshold***:
-* ***phenomiss***:
-* ***genomiss***:
-* ***maf***:
-* ***ControlCaseRatio***:
+  * *prefix*: Prefix used to name files after merged.
+  * *GWAS*: Relateive/Full path to folder containing merged files.
+  * *GWASQC*: Relateive/Full path to folder containing QCed files.
+* ***IBD_threshold***: Threshold to remove subjects based on IBD.
+* ***phenomiss***: Threshold to remove subjects based on missing phenotype.
+* ***genomiss***: Threshold to remove subjects based on missing genotype.
+* ***maf***: Minimum Allele Frequency threshold.
+* ***ControlCaseRatio***: Number of controls per case to match.
 
 # Settings
 
