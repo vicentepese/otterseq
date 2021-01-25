@@ -247,7 +247,7 @@ def manhattan_plot(settings):
         if flag == 1:
             colors = colors + ['#F8766D']*l
         else:
-            colors = colors + ['00BFC4']*l
+                colors = colors + ['00BFC4']*l
         flag = 1
 
     # Create data frame 
