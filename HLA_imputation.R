@@ -108,6 +108,12 @@ do.call(grid.arrange, pl)
 ############ COVARIATES #############
 
 # Load PCA
-pca <- 
+pca <- read.table(file = settings$file$PCA_eigenvec, sep = " ", header = FALSE)
+colnames(pca) <- c("FID", "IID", paste0(rep("PC", 20), as.character(1:20)))
 
+# Load pheno
+pheno <- read.table(file = settings$file$pheno_matched, sep = " ", header = FALSE)
+colnames(pheno) <- c("FID","IID", "pheno")
 
+# Create covars
+covars <- merge(pca, pheno, by = c("FID", "IID"))

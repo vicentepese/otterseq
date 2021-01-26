@@ -30,7 +30,7 @@
         "prefix":"LGI1",
         "GWAS":"Data/",
         "GWASQC":"Data/",
-        "PCA":"Resources/PCA",
+        "PCA":"Resources/PCA"
     },
 
     "sh_script":{
