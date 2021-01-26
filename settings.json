@@ -24,7 +24,7 @@
         "TripSNPs":"Resources/TripSNPs",
         "DupIIDs":"Resources/DupIIDs",
         "pheno":"Resources/pheno.txt",
-        "pheno_matched":"Resources/pheno_matched.txt",
+        "pheno_matched":"Resources/pheno_matched.txt"
     },
 
     "plinkFiles":{

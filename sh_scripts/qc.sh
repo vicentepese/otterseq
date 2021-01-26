@@ -51,11 +51,11 @@ rm -r temp*
 # Remove triplicated / multiallelic variants
 plink --bfile gwastempFilt --exclude $TripSNPS\
     --allow-no-sex \
-    --make-bed --out ${GWASDATAQC}${PREFIX} >>${GWASDATAQC}${PREFIX}
+    --make-bed --out ${GWASDATAQC}${PREFIX}_QC >>${GWASDATAQC}${PREFIX}_QC
 rm -r gwastemp*
 
 # Clean .bim file to remove commas (PCA)
 awk '{
     gsub(/\,/, ":", $2); print $0
-    }' ${GWASDATAQC}${PREFIX}.bim > temp.bim
-mv temp.bim ${GWASDATAQC}${PREFIX}.bim
+    }' ${GWASDATAQC}${PREFIX}_QC.bim > temp.bim
+mv temp.bim ${GWASDATAQC}${PREFIX}_QC.bim

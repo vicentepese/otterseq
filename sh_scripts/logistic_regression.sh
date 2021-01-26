@@ -13,7 +13,7 @@ GWASFILE=$(jq -r '.plinkFiles.GWASQC' settings.json)
 PHENOFILE=$(jq -r '.file.pheno_matched' settings.json)
 PCA=$(jq -r '.file.PCA_eigenvec' settings.json)
 OUTPUT=$(jq -r '.directory.GWAS_out' settings.json)
-PREFIX=$(jq -r '.plinkFiles.prefix' settings.sjon)
+PREFIX=$(jq -r '.plinkFiles.prefix' settings.json)
 
 # Create covar file 
 HEADER=("FID" "IID")
