@@ -117,3 +117,6 @@ colnames(pheno) <- c("FID","IID", "pheno")
 
 # Create covars
 covars <- merge(pca, pheno, by = c("FID", "IID"))
+
+# Write covariates
+write.table(covars, file = paste0(settings$directory$HLA_Imputation, "covars.txt"), quote=TRUE, sep = ",", row.names = FALSE, col.names = TRUE)
