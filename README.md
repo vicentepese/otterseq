@@ -57,7 +57,11 @@ To run the pipeline, please follow these this steps:
 1. Clone the repository.
 2. Fill up the `setting.json` file (refer to Settings section).
 3. Copy `.ped` files / `.bed` files to directory.
-4. Run `python run_GWAS.py` from the directory of the pipeline.
+4. Copy the a space separated file called *pheno.txt* where each line has three columns containing:
+   1. FID
+   2. IID
+   3. Phenotype (1: control, 2: case)
+5. Run `python run_GWAS.py` from the directory of the pipeline.
 
 ## Settings
 This pipeline runs on a *settings*-based logic, and therefore all paths and constants are stored in `settings.json`. To correctly run the pipeline, please fill up/modify the following sections of `settings.json`, and leave the rest unmodified.
