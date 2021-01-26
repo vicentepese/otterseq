@@ -105,4 +105,9 @@ for (i in 2:ncol(probs.data)){
 }
 do.call(grid.arrange, pl)
 
+############ COVARIATES #############
+
+# Load PCA
+pca <- 
+
 

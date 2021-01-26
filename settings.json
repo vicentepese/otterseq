@@ -15,7 +15,6 @@
         "IBDGenome":"Resources/LGI1.genome",
         "excludeID_IBD":"Resources/ID_IBD.txt",
         "PCA_eigenvec":"Resources/PCA.eigenvec",
-        "PCA_matched":"Resources/PCA_matched.eigenvec",
         "PMRA_HLA_model":"Resources/PMRA-HLA4-hg19.RData",
         "PMRA_HLA_DRB3":"Resources/PMRA_HLA_DRB3.RData",
         "PMRA_HLA_DRB4":"Resources/PMRA_HLA_DRB4.RData",
@@ -32,7 +31,6 @@
         "GWAS":"Data/",
         "GWASQC":"Data/",
         "PCA":"Resources/PCA",
-        "PCA_matched":"Resources/PCA_matched"
     },
 
     "sh_script":{
