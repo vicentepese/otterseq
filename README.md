@@ -47,7 +47,7 @@ Computes a Manhattan Plot to visualize significant variants and/or genome region
 ![Manhatan Plot](GWAS.png)
 
 ### `HLA_imputation.R`
-Utilizes HLA Genotype Imputation with Attribute Bagging (HIBAG) to impute the HLA types through `.bed` files - in this case, the QCed files. *Note:* a trained HIBAG model is necessary to run this function - if none available, please contact (Aditya Ambassi)[https://github.com/adiamb].
+Utilizes HLA Genotype Imputation with Attribute Bagging (HIBAG) to impute the HLA types through `.bed` files - in this case, the QCed files. *Note:* a trained [HIBAG](https://bioconductor.org/packages/release/bioc/html/HIBAG.html) model is necessary to run this function - if none available, please contact [Aditya Ambassi](https://github.com/adiamb).
 
 ### `submit_slurm.sh`
 Submits the pipeline to a SLURM-based computing platform. Requires modification of header.
@@ -81,5 +81,5 @@ The relative or full paths in `settings.json` must end with a slash ("/") to all
 
 # Future work
 - [ ] Remove content of folders in each iteration automatically?
-- [X] PCA cannot be performed if "," are in the SNPS ids 
-- [ ] Does not support flip in merge
+- [X] PCA cannot be performed if "," are in the SNPS ids.
+- [ ] Does not support flip in merge, maybe remove merge until robust.
