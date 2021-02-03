@@ -15,7 +15,7 @@
         "IBDGenome":"Resources/LGI1.genome",
         "excludeID_IBD":"Resources/ID_IBD.txt",
         "PCA_eigenvec":"Resources/PCA.eigenvec",
-        "PMRA_HLA_model":"Resources/PMRA-HLA4-hg19.RData",
+        "PMRA_HLA_model":"Resources/TRAINED_TAIW_ASIAN_HLA_Model_Aug2020.Rdata",
         "PMRA_HLA_DRB3":"Resources/PMRA_HLA_DRB3.RData",
         "PMRA_HLA_DRB4":"Resources/PMRA_HLA_DRB4.RData",
         "PMRA_HLA_DRB5":"Resources/PMRA_HLA_DRB5.RData",

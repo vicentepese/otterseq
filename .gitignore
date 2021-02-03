@@ -3,3 +3,4 @@ Outputs/
 *.vscode/
 .Rhistory
 .vs
+*pca*
