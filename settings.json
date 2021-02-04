@@ -19,11 +19,16 @@
         "PMRA_HLA_DRB3":"Resources/PMRA_HLA_DRB3.RData",
         "PMRA_HLA_DRB4":"Resources/PMRA_HLA_DRB4.RData",
         "PMRA_HLA_DRB5":"Resources/PMRA_HLA_DRB5.RData",
+        "PMRA_EUR":"Resources/Axiom_PMRA-European-HLARES-HLA4-hg19.RData",
+        "PMRA_AFR":"Resources/Axiom_PMRA-African-HLARES-HLA4-hg19.RData",
+        "PMRA_AMR":"Resources/Axiom_PMRA-Hispanic-HLARES-HLA4-hg19.RData",
+        "PMRA_AS":"Resources/Axiom_PMRA-Asian-HLARES-HLA4-hg19.RData",
         "DupSNPs":"Resources/DupSNPs",
         "TripSNPs":"Resources/TripSNPs",
         "DupIIDs":"Resources/DupIIDs",
         "pheno":"Resources/pheno.txt",
-        "pheno_matched":"Resources/pheno_matched.txt"
+        "pheno_matched":"Resources/pheno_matched.txt",
+        "ethnicity":"Resources/data_ethnicity.csv"
     },
 
     "plinkFiles":{
