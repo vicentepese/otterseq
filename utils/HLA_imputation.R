@@ -21,8 +21,6 @@ settings <- jsonlite::fromJSON('settings.json')
 
 ########## HLA IMPUTATION ############
 
-# Impute HLA using individual models if there is an ethnicity file
-
 # Load pre-fit model and comvert to hlaMODEL
 model.list <- get(load(settings$file$PMRA_HLA_model))
 drb3 <- get(load(settings$file$PMRA_HLA_DRB3))
@@ -46,7 +44,8 @@ cl <- makeCluster(10)
 for (locus in hla.id){
   model.hla <- hlaModelFromObj(model.list[[locus]])
   summary(model.hla)
-  pred.guess <- predict(model.hla, yourgeno, type="response+prob", nclassifiers=100, cl=cl, match.type="Position")
+  pred.guess <- predict(model.hla, yourgeno, type="response+prob", cl=cl, match.type="Position")
+  cat('PREDICTED ', locus, timestamp())
   pred.guess$value$FID <- pred.guess$value$sample.id %>% lapply(function(x) strsplit(x,"-") %>% unlist() %>% .[1]) %>% unlist()
   pred.guess$value$IID <- pred.guess$value$sample.id %>% lapply(function(x) strsplit(x,"-") %>% unlist() %>% tail(n=1)) %>% unlist()
   save(pred.guess, file = paste(settings$directory$HLA_Imputation, paste('HLA_', locus, sep = ''), '.RData', sep= ''))
@@ -129,10 +128,10 @@ for (i in 4:ncol(probs.data)){
   pl[[i-3]] <- local({
     i <- i
     p1 <- ggplot(data_plot, aes(PC1, PC2, color = get(colnames(probs.data)[i]))) + 
-      geom_point() +  
+      geom_point(aes(shape = Population)) +  
       scale_colour_gradientn(limits = c(0,1), colors =c("navyblue", "darkmagenta", "darkorange1"), oob = scales::squish) + 
       labs(color = colnames(probs.data)[i])
-    print(p1)
+    ggplotly(p1)
   })
 }
 do.call(grid.arrange, pl)

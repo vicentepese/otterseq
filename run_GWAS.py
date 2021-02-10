@@ -298,7 +298,7 @@ def logistic_regression(settings):
 
     # Run logistic regression 
     print ("Computing logistic regression")
-    subprocess.call("sbatch " + settings['sh_script']["logistic_regression.sh"], shell=True)
+    subprocess.call("bash " + settings['sh_script']["logistic_regression.sh"], shell=True)
     print("Logistic regression successfully computed")
 
 
@@ -313,17 +313,17 @@ def main():
     # Add current directory to settings 
     settings["directory"]["main"] = os.getcwd()
 
-    # Binarize GWAS files
-    if (not os.listdir(settings['directory']['GWAS_binaries'])):
-        binarizeFiles(settings) 
-    else:
-        print("Files already binarized")
+    # # Binarize GWAS files
+    # if (not os.listdir(settings['directory']['GWAS_binaries'])):
+    #     binarizeFiles(settings) 
+    # else:
+    #     print("Files already binarized")
 
-    # Get list of common SNPs across files 
-    get_SNP(settings)
+    # # Get list of common SNPs across files 
+    # get_SNP(settings)
 
-    # Merge files based on common SNPs
-    mergeFiles(settings)
+    # # Merge files based on common SNPs
+    # mergeFiles(settings)
 
     # Quality control (QC) + IBD filtering
     QC(settings)

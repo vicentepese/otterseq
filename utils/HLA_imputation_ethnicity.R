@@ -19,6 +19,15 @@ setwd("~/Documents/GWAS_pipeline")
 # Import settings
 settings <- jsonlite::fromJSON('settings.json')
 
+# Import ethnicity
+eth.df <- read.table(file = settings$file$ethnicity, header = TRUE, sep = ",")
+eth.df$sample.id <- paste0(eth.df$FID, rep("-", nrow(eth.df)), eth.df$IID)
+
+# Load PCA
+pca <- read.table(file = settings$file$PCA_eigenvec, sep = " ", header = FALSE)
+colnames(pca) <- c("FID", "IID", paste0(rep("PC", 20), as.character(1:20)))
+pca$sample.id <- paste0(pca$FID, rep('-', nrow(pca)), pca$IID)
+
 ######### IMPUTATION FUNCTION ############
 
 imputeHLA = function(data, model.list, eth){
@@ -70,10 +79,6 @@ gname <- paste0(settings$plinkFiles$GWASQC, settings$plinkFiles$prefix, "_QC")
 yourgeno <- hlaBED2Geno(bed.fn=paste(gname, ".bed", sep = ''), fam.fn=paste(gname, ".fam", sep='')
                         , bim.fn=paste(gname, ".bim", sep=''), assembly = 'hg19')
 summary(yourgeno)
-
-# Import ethnicity
-eth.df <- read.table(file = settings$file$ethnicity, header = TRUE, sep = ",")
-eth.df$sample.id <- paste0(eth.df$FID, rep("-", nrow(eth.df)), eth.df$IID)
 
 # Load ethnicity models
 EUR.list <- get(load(settings$file$PMRA_EUR))
@@ -161,9 +166,9 @@ write.table(probs.df, file = paste0(settings$directory$HLA_Imputation, "HLA_prob
 ## Plot probabilities distributions
 pl <- vector('list', ncol(probs.df)-3)
 idx <- 1
-for (i in 2:(ncol(probs.df)-2)){
+for (i in 4:(ncol(probs.df))){
   
-  pl[[i-1]] <- local({
+  pl[[i-3]] <- local({
     i <- i
     p1 <- ggplot(probs.df, aes(get(colnames(probs.df)[i]))) +
       geom_histogram() +
@@ -174,10 +179,6 @@ for (i in 2:(ncol(probs.df)-2)){
 do.call(grid.arrange, pl)
 
 ##  Plot PCA probabilities
-# Load PCA
-pca <- read.table(file = settings$file$PCA_eigenvec, sep = " ", header = FALSE)
-colnames(pca) <- c("FID", "IID", paste0(rep("PC", 20), as.character(1:20)))
-pca$sample.id <- paste0(pca$FID, rep('-', nrow(pca)), pca$IID)
 
 # Merge PCA with probs and ethnicity
 data_plot <- merge(pca, probs.df, by = c("sample.id"))
@@ -186,20 +187,41 @@ data_plot <-merge(data_plot, eth.df, by = "sample.id")
 # Plot PCAs with probs
 pl <- vector('list', ncol(probs.df)-3)
 idx <- 1
-for (i in 2:(ncol(probs.df)-2)){
+for (i in 4:(ncol(probs.df))){
   
-  pl[[i-1]] <- local({
+  pl[[i-3]] <- local({
     i <- i
     p1 <- ggplot(data_plot, aes(PC1, PC2, color = get(colnames(probs.df)[i]))) + 
-      geom_point(aes(shape = Population)) +  
+      geom_point() +  
       scale_colour_gradientn(limits = c(0,1), colors =c("navyblue", "darkmagenta", "darkorange1"), oob = scales::squish) + 
       labs(color = colnames(probs.df)[i])
-    ggplotly(p1)
+    print(p1)
   })
 }
 do.call(grid.arrange, pl)
 g <- arrangeGrob(pl) #generates g
 ggsave(file="pca_probs.pdf",g)
+
+# Mean probabilty 
+mu_prob = matrix(nrow = length(unique(data_plot$Population)))
+for (probloc in  colnames(data_plot[,c(26:34)])){
+  
+ mu_locus <- c()
+  for (eth in unique(data_plot$Population)){
+    
+    # Filter 
+    data.mu <- data_plot %>% filter(Population == eth)
+    
+    # Compute mean 
+    mu_locus <- c(mu_locus, mean(data.mu[,probloc]))
+  }
+ mu_prob <- cbind(mu_prob, mu_locus)
+  
+}
+mu_prob <- mu_prob[,2:ncol(mu_prob)]
+colnames(mu_prob) <- colnames(data_plot[,c(26:34)])
+rownames(mu_prob) <- unique(data_plot$Population)
+mu_prob
 
 ############ COVARIATES #############
 
