@@ -45,7 +45,6 @@ for (locus in hla.id){
   model.hla <- hlaModelFromObj(model.list[[locus]])
   summary(model.hla)
   pred.guess <- predict(model.hla, yourgeno, type="response+prob", cl=cl, match.type="Position")
-  cat('PREDICTED ', locus, timestamp())
   pred.guess$value$FID <- pred.guess$value$sample.id %>% lapply(function(x) strsplit(x,"-") %>% unlist() %>% .[1]) %>% unlist()
   pred.guess$value$IID <- pred.guess$value$sample.id %>% lapply(function(x) strsplit(x,"-") %>% unlist() %>% tail(n=1)) %>% unlist()
   save(pred.guess, file = paste(settings$directory$HLA_Imputation, paste('HLA_', locus, sep = ''), '.RData', sep= ''))
