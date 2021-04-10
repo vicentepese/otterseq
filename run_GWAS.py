@@ -124,10 +124,10 @@ def QC(settings):
         - QCed files through PLINK
     """
 
-    # Run IBD computation
-    print('Computing IBD')
-    subprocess.call(['bash',settings['sh_script']['IBD.sh']])
-    print("IBD successfully computed")
+    # # Run IBD computation
+    # print('Computing IBD')
+    # subprocess.call(['bash',settings['sh_script']['IBD.sh']])
+    # print("IBD successfully computed")
 
     # Get list of patients to be removed by IBD
     IBD_IDs = list()
@@ -136,20 +136,19 @@ def QC(settings):
         for row in inFile:
             row = row.split('\t')
             row = [r for r in row if r is not '']
-            PI_hat = row[8]
+            PI_hat = float(row[8])
             if float(PI_hat) > settings['IBD_threshold']:
                 IBD_IDs.append(row[0])
        
-    # Get list of patients and cases (remove unknown pheno)
+    # Get list of patients and cases 
     patientList = list()
     with open(settings['plinkFiles']['GWAS'] + settings['plinkFiles']['prefix'] +'.fam','r') as inFile:
         for row in inFile:
             row = row.split()
             pheno = int(row[5].split('\n')[0])
-            if pheno != -9:
-                patientList.append(row[0])
+            patientList.append(row[0])
     
-    # Get list of IBDS patient/cases (unknown pheno not included)
+    # Get list of IBDS patient/cases 
     high_IBD = [ID for ID in np.unique(IBD_IDs) if ID in patientList]
     
     # Check number of cases and controls
@@ -157,8 +156,8 @@ def QC(settings):
     pheno.columns = ['FID', 'IID', 'pheno']
     cases = pheno[pheno.pheno.eq(2)]
     controls = pheno[pheno.pheno.eq(1)]
-    case_count = len([subj for subj in high_IBD if subj in cases['FID']])
-    control_count = len([subj for subj in high_IBD if subj in controls['FID']])
+    case_count = cases[cases["IID"].isin(high_IBD)].shape[0]
+    control_count = controls[controls["IID"].isin(high_IBD)].shape[0]
     print('Number of cases to be excluded by IBD: ' + str(case_count))
     print('Number of controls to be excluded by IBD: ' + str(control_count))
 
@@ -313,26 +312,26 @@ def main():
     # Add current directory to settings 
     settings["directory"]["main"] = os.getcwd()
 
-    # Binarize GWAS files
-    if (not os.listdir(settings['directory']['GWAS_binaries'])):
-        binarizeFiles(settings) 
-    else:
-        print("Files already binarized")
+    # # Binarize GWAS files
+    # if (not os.listdir(settings['directory']['GWAS_binaries'])):
+    #     binarizeFiles(settings) 
+    # else:
+    #     print("Files already binarized")
 
-    # Get list of common SNPs across files 
-    get_SNP(settings)
+    # # Get list of common SNPs across files 
+    # get_SNP(settings)
 
-    # Merge files based on common SNPs
-    mergeFiles(settings)
+    # # Merge files based on common SNPs
+    # mergeFiles(settings)
 
-    # Quality control (QC) + IBD filtering
-    QC(settings)
+    # # Quality control (QC) + IBD filtering
+    # QC(settings)
 
-    # Compute PCA 
-    computePCA(settings)
+    # # Compute PCA 
+    # computePCA(settings)
 
-    # Plot PCA
-    plotPCA(settings, type = "batch")
+    # # Plot PCA
+    # plotPCA(settings, type = "batch")
 
     # Compute case-control matching 
     patientMatching(settings)
