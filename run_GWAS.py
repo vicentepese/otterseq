@@ -242,6 +242,10 @@ def patientMatching(settings):
     cases = pheno[pheno.pheno.eq(2)]
     controls = pheno[pheno.pheno.eq(1)]
 
+    # Filter cases and controls present in the data 
+    cases = cases[cases["FID"].isin(PCA["FID"]) & cases["IID"].isin(PCA["IID"])]
+    controls = controls[controls["FID"].isin(PCA["FID"]) & controls["IID"].isin(PCA["IID"])]
+
     # Get matching patients ratio
     ratio = settings['ControlCaseRatio']
 
@@ -312,26 +316,26 @@ def main():
     # Add current directory to settings 
     settings["directory"]["main"] = os.getcwd()
 
-    # # Binarize GWAS files
-    # if (not os.listdir(settings['directory']['GWAS_binaries'])):
-    #     binarizeFiles(settings) 
-    # else:
-    #     print("Files already binarized")
+    # Binarize GWAS files
+    if (not os.listdir(settings['directory']['GWAS_binaries'])):
+        binarizeFiles(settings) 
+    else:
+        print("Files already binarized")
 
-    # # Get list of common SNPs across files 
-    # get_SNP(settings)
+    # Get list of common SNPs across files 
+    get_SNP(settings)
 
-    # # Merge files based on common SNPs
-    # mergeFiles(settings)
+    # Merge files based on common SNPs
+    mergeFiles(settings)
 
-    # # Quality control (QC) + IBD filtering
-    # QC(settings)
+    # Quality control (QC) + IBD filtering
+    QC(settings)
 
-    # # Compute PCA 
-    # computePCA(settings)
+    # Compute PCA 
+    computePCA(settings)
 
-    # # Plot PCA
-    # plotPCA(settings, type = "batch")
+    # Plot PCA
+    plotPCA(settings, type = "batch")
 
     # Compute case-control matching 
     patientMatching(settings)
