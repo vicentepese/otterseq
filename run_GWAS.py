@@ -124,10 +124,10 @@ def QC(settings):
         - QCed files through PLINK
     """
 
-    # # Run IBD computation
-    # print('Computing IBD')
-    # subprocess.call(['bash',settings['sh_script']['IBD.sh']])
-    # print("IBD successfully computed")
+    # Run IBD computation
+    print('Computing IBD')
+    subprocess.call(['bash',settings['sh_script']['IBD.sh']])
+    print("IBD successfully computed")
 
     # Get list of patients to be removed by IBD
     IBD_IDs = list()
