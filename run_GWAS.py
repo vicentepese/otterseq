@@ -135,7 +135,7 @@ def QC(settings):
         next(inFile)
         for row in inFile:
             row = row.split('\t')
-            row = [r for r in row if r is not '']
+            row = [r for r in row if r != '']
             PI_hat = float(row[8])
             if float(PI_hat) > settings['IBD_threshold']:
                 IBD_IDs.append(row[0])
