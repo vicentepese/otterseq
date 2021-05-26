@@ -318,7 +318,10 @@ def main():
     # Merge files based on common SNPs if needed
     filenames = [file for file in os.listdir(settings["directory"]["GWAS_binaries"]) if ".bed" in file]
     if len(filenames) == 1:
+        # Update settings
         settings["plinkFiles"]["GWAS"] = settings["directory"]["GWAS_binaries"]
+        with open("settings.json", "w") as jsonFile:
+            json.dump(settings, jsonFile, indent=4)
     else:        
         mergeFiles(settings)
 

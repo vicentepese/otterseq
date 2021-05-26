@@ -1,56 +1,51 @@
 {
-
-    "directory":{
-        "GWAS":"Data/GWAS/",
-        "GWAS_binaries":"Data/GWAS_binaries/",
-        "sh_scripts":"sh_scripts/",
-        "Resources":"Resources/",
-        "HLA_Imputation":"Outputs/HLA_Imputation/",
-        "GWAS_out":"Outputs/GWAS/"
+    "directory": {
+        "GWAS": "Data/GWAS/",
+        "GWAS_binaries": "Data/GWAS_binaries/",
+        "sh_scripts": "sh_scripts/",
+        "Resources": "Resources/",
+        "HLA_Imputation": "Outputs/HLA_Imputation/",
+        "GWAS_out": "Outputs/GWAS/",
+        "main": "/home/vicente/Documents/GWAS_tst/GWAS_pipeline"
     },
-
-    "file":{
-        "commonSNPs":"Resources/commonSNPs.txt",
-        "mergeList":"Resources/mergeList.txt",
-        "IBDGenome":"Resources/IBD.genome",
-        "excludeID_IBD":"Resources/ID_IBD.txt",
-        "PCA_eigenvec":"Resources/PCA.eigenvec",
-        "PMRA_HLA_model":"Resources/PMRA-HLA4-hg19.RData",
-        "PMRA_HLA_DRB3":"Resources/PMRA_HLA_DRB3.RData",
-        "PMRA_HLA_DRB4":"Resources/PMRA_HLA_DRB4.RData",
-        "PMRA_HLA_DRB5":"Resources/PMRA_HLA_DRB5.RData",
-        "PMRA_EUR":"Resources/TRAINED_PSYCH_EUR_HLA_Model_Oct2020.Rdata",
-        "PMRA_AFR":"Resources/Axiom_PMRA-African-HLARES-HLA4-hg19.RData",
-        "PMRA_AMR":"Resources/Axiom_PMRA-Hispanic-HLARES-HLA4-hg19.RData",
-        "PMRA_AS":"Resources/TRAINED_TAIW_ASIAN_HLA_Model_Aug2020.Rdata",
-        "DupSNPs":"Resources/DupSNPs",
-        "TripSNPs":"Resources/TripSNPs",
-        "DupIIDs":"Resources/DupIIDs",
-        "pheno":"Resources/pheno.txt",
-        "pheno_matched":"Resources/pheno_matched.txt",
-        "ethnicity":"Resources/data_ethnicity.csv"
+    "file": {
+        "commonSNPs": "Resources/commonSNPs.txt",
+        "mergeList": "Resources/mergeList.txt",
+        "IBDGenome": "Resources/IBD.genome",
+        "excludeID_IBD": "Resources/ID_IBD.txt",
+        "PCA_eigenvec": "Resources/PCA.eigenvec",
+        "PMRA_HLA_model": "Resources/PMRA-HLA4-hg19.RData",
+        "PMRA_HLA_DRB3": "Resources/PMRA_HLA_DRB3.RData",
+        "PMRA_HLA_DRB4": "Resources/PMRA_HLA_DRB4.RData",
+        "PMRA_HLA_DRB5": "Resources/PMRA_HLA_DRB5.RData",
+        "PMRA_EUR": "Resources/TRAINED_PSYCH_EUR_HLA_Model_Oct2020.Rdata",
+        "PMRA_AFR": "Resources/Axiom_PMRA-African-HLARES-HLA4-hg19.RData",
+        "PMRA_AMR": "Resources/Axiom_PMRA-Hispanic-HLARES-HLA4-hg19.RData",
+        "PMRA_AS": "Resources/TRAINED_TAIW_ASIAN_HLA_Model_Aug2020.Rdata",
+        "DupSNPs": "Resources/DupSNPs",
+        "TripSNPs": "Resources/TripSNPs",
+        "DupIIDs": "Resources/DupIIDs",
+        "pheno": "Resources/pheno.txt",
+        "pheno_matched": "Resources/pheno_matched.txt",
+        "ethnicity": "Resources/data_ethnicity.csv"
     },
-
-    "plinkFiles":{
-        "prefix":"LGI1",
-        "GWAS":"Data/",
-        "GWASQC":"Data/",
-        "PCA":"Resources/PCA"
+    "plinkFiles": {
+        "prefix": "IGLON5",
+        "GWAS": "Data/GWAS_binaries/",
+        "GWASQC": "Data/",
+        "PCA": "Resources/PCA"
     },
-
-    "sh_script":{
-        "binarize.sh":"sh_scripts/binarize.sh",
-        "mergeFiles.sh":"sh_scripts/mergeFiles.sh",
-        "IBD.sh":"sh_scripts/IBD.sh",
-        "pca.sh":"sh_scripts/pca.sh",
-        "qc.sh":"sh_scripts/qc.sh",
-        "logistic_regression.sh":"sh_scripts/logistic_regression.sh"
+    "sh_script": {
+        "binarize.sh": "sh_scripts/binarize.sh",
+        "mergeFiles.sh": "sh_scripts/mergeFiles.sh",
+        "IBD.sh": "sh_scripts/IBD.sh",
+        "pca.sh": "sh_scripts/pca.sh",
+        "qc.sh": "sh_scripts/qc.sh",
+        "logistic_regression.sh": "sh_scripts/logistic_regression.sh"
     },
-
-    "IBD_threshold":0.2,
-    "phenomiss":0.15,
-    "genomiss":0.1,
-    "maf":0.05,
-    "ControlCaseRatio":10
-
+    "IBD_threshold": 0.2,
+    "phenomiss": 0.15,
+    "genomiss": 0.1,
+    "maf": 0.05,
+    "ControlCaseRatio": 10
 }
