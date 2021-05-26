@@ -22,18 +22,12 @@ BINFILES=$(find $GWASBIN -iname '*.bim' -type f -exec sh -c 'printf "%s\n" "${0%
 NUMFILES=$(awk 'END{print NR}' $MERGELIST)
 
 # If more than one dataset, merge and filter - else, filter
-if [ $NUMFILES -lt 1 ];
-then 
-    plink --bfile $BINFILES \
-    --merge-list $MERGELIST \
-    --extract $COMMONSNPS \
-    --allow-no-sex \
-    --memory 4626791360 \
-    --make-bed \
-    --out ${GWAS}$PREFIX > ${GWAS}$PREFIX
-else
-    cp $BINFILES.bed ${GWAS}$PREFIX.bed
-    cp $BINFILES.fam ${GWAS}$PREFIX.fam
-    cp $BINFILES.bim ${GWAS}$PREFIX.bim
-fi
+plink --bfile $BINFILES \
+--merge-list $MERGELIST \
+--extract $COMMONSNPS \
+--allow-no-sex \
+--memory 4626791360 \
+--make-bed \
+--out ${GWAS}$PREFIX > ${GWAS}$PREFIX
+
 

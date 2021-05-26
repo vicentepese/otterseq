@@ -315,8 +315,12 @@ def main():
     # Get list of common SNPs across files 
     get_SNP(settings)
 
-    # Merge files based on common SNPs
-    mergeFiles(settings)
+    # Merge files based on common SNPs if needed
+    filenames = [file for file in os.listdir(settings["directory"]["GWAS_binaries"]) if ".bed" in file]
+    if len(filenames) == 1:
+        settings["plinkFiles"]["GWAS"] = settings["directory"]["GWAS_binaries"]
+    else:        
+        mergeFiles(settings)
 
     # Quality control (QC) + IBD filtering
     QC(settings)
