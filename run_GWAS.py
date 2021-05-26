@@ -130,23 +130,13 @@ def QC(settings):
     print("IBD successfully computed")
 
     # Get list of patients to be removed by IBD
-    IBD_IDs = list()
-    with open(settings['file']['IBDGenome'], 'r') as inFile:
-        next(inFile)
-        for row in inFile:
-            row = row.split('\t')
-            row = [r for r in row if r != '']
-            PI_hat = float(row[8])
-            if float(PI_hat) > settings['IBD_threshold']:
-                IBD_IDs.append(row[0])
-       
+    IBD_genome = pd.read_table(settings['file']['IBDGenome'], sep = '\t', header=0,index_col=None)
+    IBD_IDs = IBD_genome.loc[IBD_genome.PropIBD > settings["IBD_threshold"]].FID1.tolist()
+
     # Get list of patients and cases 
-    patientList = list()
-    with open(settings['plinkFiles']['GWAS'] + settings['plinkFiles']['prefix'] +'.fam','r') as inFile:
-        for row in inFile:
-            row = row.split()
-            pheno = int(row[5].split('\n')[0])
-            patientList.append(row[0])
+    patientList = pd.read_table(settings['plinkFiles']['GWAS'] + settings['plinkFiles']['prefix'] +'.fam',
+                                sep=" ", header=None, index_col=None)
+    patientList = patientList.iloc[:,1].tolist()
     
     # Get list of IBDS patient/cases 
     high_IBD = [ID for ID in np.unique(IBD_IDs) if ID in patientList]

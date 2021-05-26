@@ -12,7 +12,7 @@
     "file":{
         "commonSNPs":"Resources/commonSNPs.txt",
         "mergeList":"Resources/mergeList.txt",
-        "IBDGenome":"Resources/LGI1.genome",
+        "IBDGenome":"Resources/IBD.genome",
         "excludeID_IBD":"Resources/ID_IBD.txt",
         "PCA_eigenvec":"Resources/PCA.eigenvec",
         "PMRA_HLA_model":"Resources/PMRA-HLA4-hg19.RData",
