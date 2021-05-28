@@ -321,7 +321,7 @@ def main():
         # Update settings
         settings["plinkFiles"]["GWAS"] = settings["directory"]["GWAS_binaries"]
         with open("settings.json", "w") as jsonFile:
-            json.dump(settings, jsonFile, indent=4)
+            json.dump(settings, jsonFile, indent=4) 
     else:        
         mergeFiles(settings)
 

@@ -8,8 +8,6 @@ library(viridis)
 library(hrbrthemes)
 
 ########## IMPORT ##########
-setwd("~/Documents/GWAS_pipeline")
-
 # Import settings
 settings <- jsonlite::fromJSON('settings.json')
 
