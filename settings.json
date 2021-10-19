@@ -27,7 +27,8 @@
         "DupIIDs": "Resources/DupIIDs",
         "pheno": "Resources/pheno.txt",
         "pheno_matched": "Resources/pheno_matched.txt",
-        "ethnicity": "Resources/data_ethnicity.csv"
+        "ethnicity": "Resources/data_ethnicity.csv",
+        "matched_controls":"Resources/matched_controls.csv"
     },
     "plinkFiles": {
         "prefix": "LGI1_GWAS",

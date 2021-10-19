@@ -240,7 +240,7 @@ def patientMatching(settings):
     ratio = settings['ControlCaseRatio']
 
     # For each case, compute euclidean distance
-    matched_controls = pd.DataFrame()
+    matched_controls, matched_controls_all = pd.DataFrame(), list()
     for idx, (FID, IID) in enumerate(zip(cases['FID'], cases['IID'])):
 
         # Print
@@ -263,6 +263,12 @@ def patientMatching(settings):
         patEuDist = pd.DataFrame(patEuDist)
         patEuDist= patEuDist.sort_values(by = "dist",  ascending=True)
 
+        # Create list of matched controls for each case 
+        sample_id_case = "-".join([FID,IID])
+        patEuDist["sample.id_controls"] = ["-".join([FID, IID]) for FID, IID in zip(patEuDist["FID_control"], patEuDist["IID_control"])]
+        pat_matched_controls = [control[0] for control in patEuDist[["sample.id_controls"]][0:ratio].values.tolist()]
+        matched_controls_all.append([sample_id_case] + pat_matched_controls)
+        
         # Get #ratio# of matched controls and append to DataFrame
         matched_controls = matched_controls.append(patEuDist[['FID_control','IID_control']][0:ratio])
 
@@ -277,6 +283,13 @@ def patientMatching(settings):
         
     # Write patient list to csv file 
     patList.to_csv(settings['file']['pheno_matched'], sep = ' ', header = None, index = False)
+    
+    # Create dataframe with matched controls per case 
+    matched_controls_all = pd.DataFrame.from_records(matched_controls_all)
+    matched_controls_all.columns = ["sample.id_case"] + ["sample.id_control_" + str(index) for index in range(ratio)]
+    
+    #Write matched controls per case 
+    matched_controls_all.to_csv(settings["file"]["matched_controls"], header=True, index=False)
 
     # Print 
     print ("Cases successfully matched. Matched controls: " +  str(patList[patList.pheno.eq(1)].shape[0]))
