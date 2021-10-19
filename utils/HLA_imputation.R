@@ -152,4 +152,4 @@ covars <- merge(pca, pheno, by = c("FID", "IID"))
 covars$sample.id <- paste0(covars$FID, rep("-", nrow(covars)), covars$IID)
 
 # Write covariates
-write.table(covars, file = paste0(settings$directory$HLA_Imputation, "covars.txt"), quote=TRUE, sep = ",", row.names = FALSE, col.names = TRUE)
+write.csv(covars, file = paste0(settings$directory$HLA_Imputation, "covars.csv"), quote=TRUE, sep = ",", row.names = FALSE, col.names = TRUE)

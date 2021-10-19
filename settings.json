@@ -6,7 +6,7 @@
         "Resources": "Resources/",
         "HLA_Imputation": "Outputs/HLA_Imputation/",
         "GWAS_out": "Outputs/GWAS/",
-        "main": "/home/vicente/Documents/GWAS_tst/GWAS_pipeline"
+        "main": "/home/vicente/Documents/GWAS_pipeline"
     },
     "file": {
         "commonSNPs": "Resources/commonSNPs.txt",
@@ -30,7 +30,7 @@
         "ethnicity": "Resources/data_ethnicity.csv"
     },
     "plinkFiles": {
-        "prefix": "IGLON5",
+        "prefix": "LGI1_GWAS",
         "GWAS": "Data/GWAS_binaries/",
         "GWASQC": "Data/",
         "PCA": "Resources/PCA"
