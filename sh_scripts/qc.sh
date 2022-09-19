@@ -2,17 +2,17 @@
 
 ###################################################################
 #Script Name	: binarize.sh                                                                                            
-#Description	: Perform Quality Control of .bed files through PLINK                                                                      
+#Description	: Perform Quality Control of .bed files through ./plink                                                                      
 #Args           : None                                                                                           
 #Author       	: Vicente Peris Sempere                                                
 #Email         	: vipese@stanford.edu                                        
 ###################################################################
 
 # Read from settings
-    # Plink files
-GWASDATA=$(jq -r '.plinkFiles.GWAS' settings.json)
-GWASDATAQC=$(jq -r '.plinkFiles.GWASQC' settings.json)
-PREFIX=$(jq -r '.plinkFiles.prefix' settings.json)
+    # ./plink files
+GWASDATA=$(jq -r '../plinkFiles.GWAS' settings.json)
+GWASDATAQC=$(jq -r '../plinkFiles.GWASQC' settings.json)
+PREFIX=$(jq -r '../plinkFiles.prefix' settings.json)
     # Variables for QC
 IBD_ID=$(jq -r '.file.excludeID_IBD' settings.json)
 PHENOMISS=$(jq -r '.phenomiss' settings.json)
@@ -23,7 +23,7 @@ DupIIDs=$(jq -r '.file.DupIIDs' settings.json)
 TripSNPS=$(jq -r '.file.TripSNPs' settings.json)
 
 # Parse duplicate variants (based on position and allele codes)
-plink --bfile ${GWASDATA}${PREFIX} --list-duplicate-vars suppress-first \
+./plink --bfile ${GWASDATA}${PREFIX} --list-duplicate-vars suppress-first \
     --allow-no-sex --out temp > temp
 awk '{print $4}' temp.dupvar > $DupSNPs
 rm -r temp*
@@ -36,20 +36,20 @@ cp $IBD_ID temp_remove
 awk '{print $0}' $DupIIDs >> temp_remove
 
 # Perform Quality control - Remove duplicated variants
-plink --bfile ${GWASDATA}${PREFIX} --remove temp_remove --exclude $DupSNPs\
+./plink --bfile ${GWASDATA}${PREFIX} --remove temp_remove --exclude $DupSNPs\
     --allow-no-sex \
     --maf $MAF --geno $GENOMISS --mind $PHENOMISS \
     --make-bed --out gwastempFilt > gwastempFilt
 rm temp_remove
 
 # Parse triplicated variants / multiallelic variants
-plink --bfile gwastempFilt --list-duplicate-vars\
+./plink --bfile gwastempFilt --list-duplicate-vars\
     --allow-no-sex --out temp > temp
 awk '{print $4}' temp.dupvar > $TripSNPS
 rm -r temp*
 
 # Remove triplicated / multiallelic variants
-plink --bfile gwastempFilt --exclude $TripSNPS\
+./plink --bfile gwastempFilt --exclude $TripSNPS\
     --allow-no-sex \
     --make-bed --out ${GWASDATAQC}${PREFIX}_QC >>${GWASDATAQC}${PREFIX}_QC
 rm -r gwastemp*
