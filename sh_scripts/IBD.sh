@@ -13,12 +13,6 @@ GWASDATA=$(jq -r .plinkFiles.GWAS settings.json)
 IBDGEN=$(jq -r .file.IBDGenome settings.json)
 PREFIX=$(jq -r '.plinkFiles.prefix' settings.json)
 
-
-module load plink 
-
-
+# Compute IBD
 ./bin/plink --bfile ${GWASDATA}${PREFIX} --genome --out $IBDGEN
 
-# king -b ${GWASDATA}${PREFIX}.bed --ibd 
-# mv king.kin $IBDGEN
-# rm -r *king*

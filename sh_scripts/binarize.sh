@@ -14,7 +14,6 @@ GWASDIR=$(jq -r '.directory.GWAS' settings.json)
 GWASBINDIR=$(jq -r '.directory.GWAS_binaries' settings.json)
 
 # For each file, binarize
-
 GWASFILES=$(ls $GWASDIR)
 for file in ${GWASFILES[@]} ; do
     if [[ $file == *'.ped'* ]] ; then
