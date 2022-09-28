@@ -31,7 +31,7 @@ awk -F " " '{
 }' tst > covartemp  
 
 # Run logistic regression -- association analysis
-plink --bfile ${GWASFILE}${PREFIX}_QC --pheno $PHENOFILE \
+./bin/plink --bfile ${GWASFILE}${PREFIX}_QC --pheno $PHENOFILE \
     --covar covartemp --covar-name PC1, PC2, PC3, PC4 \
     --logistic --allow-no-sex --out ${OUTPUT}${PREFIX}
 

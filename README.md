@@ -10,9 +10,10 @@ Required Python modules:
 > collections <br>
 > matplotlib v3.0.2 <br>
 > scipy v1.2.1 <br>
-> king v2.2.4 <br>
-> plink v1.9 <br>
 > jq v1.6
+
+Binaries included in the pipeline:
+> plink 1.9
 
 # Introduction 
 A Genome Wide Association Study or GWAS aims to study the potential association of Single Nucleotide Polymorphisims (SNP or variant) with a specific disease by leveraging statistical methods and comparing healthy controls with affected cases. 

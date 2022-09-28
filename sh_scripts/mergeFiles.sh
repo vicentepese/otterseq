@@ -22,7 +22,7 @@ BINFILES=$(find $GWASBIN -iname '*.bim' -type f -exec sh -c 'printf "%s\n" "${0%
 NUMFILES=$(awk 'END{print NR}' $MERGELIST)
 
 # If more than one dataset, merge and filter - else, filter
-plink --bfile $BINFILES \
+./bin/plink --bfile $BINFILES \
 --merge-list $MERGELIST \
 --extract $COMMONSNPS \
 --allow-no-sex \
