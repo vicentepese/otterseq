@@ -2,18 +2,18 @@
 
 ###################################################################
 #Script Name	: binarize.sh                                                                                            
-#Description	: Computes a logistic regression through ./plink                                                                       
+#Description	: Computes a logistic regression through PLINK                                                                       
 #Args           : None                                                                                           
 #Author       	: Vicente Peris Sempere                                                
 #Email         	: vipese@stanford.edu                                        
 ###################################################################
 
 # Read settings 
-GWASFILE=$(jq -r '../plinkFiles.GWASQC' settings.json)
+GWASFILE=$(jq -r '.plinkFiles.GWASQC' settings.json)
 PHENOFILE=$(jq -r '.file.pheno_matched' settings.json)
 PCA=$(jq -r '.file.PCA_eigenvec' settings.json)
 OUTPUT=$(jq -r '.directory.GWAS_out' settings.json)
-PREFIX=$(jq -r '../plinkFiles.prefix' settings.json)
+PREFIX=$(jq -r '.plinkFiles.prefix' settings.json)
 
 # Create covar file 
 HEADER=("FID" "IID")
@@ -31,7 +31,7 @@ awk -F " " '{
 }' tst > covartemp  
 
 # Run logistic regression -- association analysis
-./plink --bfile ${GWASFILE}${PREFIX}_QC --pheno $PHENOFILE \
+./bin/plink --bfile ${GWASFILE}${PREFIX}_QC --pheno $PHENOFILE \
     --covar covartemp --covar-name PC1, PC2, PC3, PC4 \
     --logistic --allow-no-sex --out ${OUTPUT}${PREFIX}
 

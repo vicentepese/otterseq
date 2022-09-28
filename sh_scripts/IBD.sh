@@ -9,10 +9,16 @@
 ###################################################################
 
 # Get directories
-GWASDATA=$(jq -r ../plinkFiles.GWAS settings.json)
+GWASDATA=$(jq -r .plinkFiles.GWAS settings.json)
 IBDGEN=$(jq -r .file.IBDGenome settings.json)
-PREFIX=$(jq -r '../plinkFiles.prefix' settings.json)
+PREFIX=$(jq -r '.plinkFiles.prefix' settings.json)
 
-./king -b ${GWASDATA}${PREFIX}.bed --ibd 
-mv king.seg $IBDGEN
-rm -r *king*
+
+module load plink 
+
+
+./bin/plink --bfile ${GWASDATA}${PREFIX} --genome --out $IBDGEN
+
+# king -b ${GWASDATA}${PREFIX}.bed --ibd 
+# mv king.kin $IBDGEN
+# rm -r *king*

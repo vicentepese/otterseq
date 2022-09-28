@@ -20,7 +20,7 @@ for file in ${GWASFILES[@]} ; do
     if [[ $file == *'.ped'* ]] ; then
         echo "Converting $file to binary"
         IFS='.' read -a strarr <<< "$file"
-        ./plink --file ${GWASDIR}${strarr[0]} --allow-no-sex \
+        ./bin/plink --file ${GWASDIR}${strarr[0]} --allow-no-sex \
             --noweb --make-bed --out ${GWASBINDIR}${strarr[0]} >> ${GWASBINDIR}${strarr[0]}.log
     fi  
 done 
