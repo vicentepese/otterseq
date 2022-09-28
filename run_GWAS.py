@@ -130,8 +130,8 @@ def QC(settings):
     print("IBD successfully computed")
 
     # Get list of patients to be removed by IBD
-    IBD_genome = pd.read_table(settings['file']['IBDGenome'], sep = '\t', header=0,index_col=None)
-    IBD_IDs = IBD_genome.loc[IBD_genome.PropIBD > settings["IBD_threshold"]].FID1.tolist()
+    IBD_genome = pd.read_table(settings['file']['IBDGenome'] + '.genome', delim_whitespace=True, header=0,index_col=None)
+    IBD_IDs = IBD_genome.loc[IBD_genome.PI_HAT > settings["IBD_threshold"]].IID1.tolist()
 
     # Get list of patients and cases 
     patientList = pd.read_table(settings['plinkFiles']['GWAS'] + settings['plinkFiles']['prefix'] +'.fam',
@@ -211,6 +211,8 @@ def plotPCA(settings, type = "batch"):
     ax = sns.relplot(data=PCA, x = 'PC1', y = 'PC2', hue = "pheno")
     ax.set(xlabel = "PC1", ylabel = "PC2", title = "PCA -- Cases: " + str(Ncases) + " // Controls " + str(Ncontrols))
     plt.show()
+    ax.savefig("GWAS_" + type +".png") 
+
 
 def patientMatching(settings):
     """Matches cases with its closes controls based on provided ratio, and Euclidian Distance
