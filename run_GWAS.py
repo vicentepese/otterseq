@@ -130,19 +130,19 @@ def QC(settings):
     print("IBD successfully computed")
 
     # Get list of patients to be removed by IBD
-    IBD_genome = pd.read_table(settings['file']['IBDGenome'] + '.genome', delim_whitespace=True, header=0,index_col=None)
-    IBD_IDs = IBD_genome.loc[IBD_genome.PI_HAT > settings["IBD_threshold"]].IID1.tolist()
+    IBD_genome = pd.read_table(settings['file']['IBDGenome'], delim_whitespace=True, header=0,index_col=None)
+    IBD_IDs = IBD_genome.loc[IBD_genome.KINSHIP  > settings["IBD_threshold"]].IID1.tolist()
 
     # Get list of patients and cases 
     patientList = pd.read_table(settings['plinkFiles']['GWAS'] + settings['plinkFiles']['prefix'] +'.fam',
-                                sep=" ", header=None, index_col=None)
+                                delim_whitespace=True, header=None, index_col=None)
     patientList = patientList.iloc[:,1].tolist()
     
     # Get list of IBDS patient/cases 
     high_IBD = [ID for ID in np.unique(IBD_IDs) if ID in patientList]
     
     # Check number of cases and controls
-    pheno = pd.read_csv(settings['file']['pheno'], sep = ' ', header = None)
+    pheno = pd.read_csv(settings['file']['pheno'], delim_whitespace=True, header = None)
     pheno.columns = ['FID', 'IID', 'pheno']
     cases = pheno[pheno.pheno.eq(2)]
     controls = pheno[pheno.pheno.eq(1)]
@@ -189,7 +189,7 @@ def plotPCA(settings, type = "batch"):
     if type == "batch":
 
         # Import pheno 
-        pheno = pd.read_csv(settings['file']['pheno'], sep = ' ', header = None)
+        pheno = pd.read_csv(settings['file']['pheno'], delim_whitespace=True, header = None)
         pheno.columns = ['FID', 'IID', 'pheno']
         pheno['FID']=pheno['FID'].astype(object)
 
@@ -197,7 +197,7 @@ def plotPCA(settings, type = "batch"):
     elif type == "match":
 
         # Import matched pheno
-        pheno = pd.read_csv(settings['file']['pheno_matched'], sep = ' ', header = None)
+        pheno = pd.read_csv(settings['file']['pheno_matched'], delim_whitespace=True, header = None)
         pheno.columns = ['FID', 'IID', 'pheno']
         pheno['FID']=pheno['FID'].astype(object)
 
@@ -229,7 +229,7 @@ def patientMatching(settings):
     # Get PCs, cases and controls
     PCA = pd.read_csv(settings['file']['PCA_eigenvec'], header = None, delim_whitespace = True)
     PCA.columns = ['FID', 'IID'] + ['PC' + str(x) for x in range(1,21)]
-    pheno = pheno = pd.read_csv(settings['file']['pheno'], sep = ' ', header = None)
+    pheno = pheno = pd.read_csv(settings['file']['pheno'], delim_whitespace=True, header = None)
     pheno.columns = ['FID', 'IID', 'pheno']
     cases = pheno[pheno.pheno.eq(2)]
     controls = pheno[pheno.pheno.eq(1)]
@@ -284,7 +284,7 @@ def patientMatching(settings):
     patList = patList.append(cases)
         
     # Write patient list to csv file 
-    patList.to_csv(settings['file']['pheno_matched'], sep = ' ', header = None, index = False)
+    patList.to_csv(settings['file']['pheno_matched'], delim_whitespace=True, header = None, index = False)
     
     # Create dataframe with matched controls per case 
     matched_controls_all = pd.DataFrame.from_records(matched_controls_all)
