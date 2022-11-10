@@ -14,5 +14,6 @@ IBDGEN=$(jq -r .file.IBDGenome settings.json)
 PREFIX=$(jq -r '.plinkFiles.prefix' settings.json)
 
 # Compute IBD
-./bin/plink --bfile ${GWASDATA}${PREFIX} --genome --out $IBDGEN
+./bin/plink2 --bfile ${GWASDATA}${PREFIX} --make-king-table --out $IBDGEN
+mv $IBDGEN.kin0 $IBDGEN
 
