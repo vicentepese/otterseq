@@ -284,7 +284,7 @@ def patientMatching(settings):
     patList = patList.append(cases)
         
     # Write patient list to csv file 
-    patList.to_csv(settings['file']['pheno_matched'], header = None, index = False)
+    patList.to_csv(settings['file']['pheno_matched'], sep = ' ', header = None, index = False)
     
     # Create dataframe with matched controls per case 
     matched_controls_all = pd.DataFrame.from_records(matched_controls_all)
@@ -321,30 +321,30 @@ def main():
     # Add current directory to settings 
     settings["directory"]["main"] = os.getcwd()
 
-    # Binarize GWAS files
-    if (not os.listdir(settings['directory']['GWAS_binaries'])):
-        binarizeFiles(settings) 
-    else:
-        print("Files already binarized")
+    # # Binarize GWAS files
+    # if (not os.listdir(settings['directory']['GWAS_binaries'])):
+    #     binarizeFiles(settings) 
+    # else:
+    #     print("Files already binarized")
 
-    # Get list of common SNPs across files 
-    get_SNP(settings)
+    # # Get list of common SNPs across files 
+    # get_SNP(settings)
 
-    # Merge files based on common SNPs if needed
-    filenames = [file for file in os.listdir(settings["directory"]["GWAS_binaries"]) if ".bed" in file]
-    if len(filenames) == 1:
-        # Update settings
-        settings["plinkFiles"]["GWAS"] = settings["directory"]["GWAS_binaries"]
-        with open("settings.json", "w") as jsonFile:
-            json.dump(settings, jsonFile, indent=4) 
-    else:        
-        mergeFiles(settings)
+    # # Merge files based on common SNPs if needed
+    # filenames = [file for file in os.listdir(settings["directory"]["GWAS_binaries"]) if ".bed" in file]
+    # if len(filenames) == 1:
+    #     # Update settings
+    #     settings["plinkFiles"]["GWAS"] = settings["directory"]["GWAS_binaries"]
+    #     with open("settings.json", "w") as jsonFile:
+    #         json.dump(settings, jsonFile, indent=4) 
+    # else:        
+    #     mergeFiles(settings)
 
-    # Quality control (QC) + IBD filtering
-    QC(settings)
+    # # Quality control (QC) + IBD filtering
+    # QC(settings)
 
-    # Compute PCA 
-    computePCA(settings)
+    # # Compute PCA 
+    # computePCA(settings)
 
     # Plot PCA
     plotPCA(settings, type = "batch")
