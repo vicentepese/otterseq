@@ -284,7 +284,7 @@ def patientMatching(settings):
     patList = patList.append(cases)
         
     # Write patient list to csv file 
-    patList.to_csv(settings['file']['pheno_matched'], delim_whitespace=True, header = None, index = False)
+    patList.to_csv(settings['file']['pheno_matched'], header = None, index = False)
     
     # Create dataframe with matched controls per case 
     matched_controls_all = pd.DataFrame.from_records(matched_controls_all)
