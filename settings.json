@@ -31,7 +31,7 @@
         "matched_controls":"Resources/matched_controls.csv"
     },
     "plinkFiles": {
-        "prefix": "LGI1_GWAS",
+        "prefix": "CASPR2_GWAS",
         "GWAS": "Data/GWAS_binaries/",
         "GWASQC": "Data/",
         "PCA": "Resources/PCA"
