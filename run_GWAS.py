@@ -208,10 +208,10 @@ def plotPCA(settings, type = "batch"):
     Ncases = PCA[PCA.pheno.eq(2)].shape[0]
     Ncontrols = PCA[PCA.pheno.eq(1)].shape[0]
     sns.set_style()
-    ax = sns.relplot(data=PCA, x = 'PC1', y = 'PC2', hue = "pheno")
+    ax = sns.scatterplot(data=PCA, x = 'PC1', y = 'PC2', hue = "pheno")
     ax.set(xlabel = "PC1", ylabel = "PC2", title = "PCA -- Cases: " + str(Ncases) + " // Controls " + str(Ncontrols))
     plt.show()
-    ax.savefig("GWAS_" + type +".png") 
+    plt.savefig("GWAS_" + type +".png") 
 
 
 def patientMatching(settings):
@@ -259,7 +259,12 @@ def patientMatching(settings):
             PC_ctrl = PCA[PCA.FID.eq(FID_ctrl) & PCA.IID.eq(IID_ctrl)].drop(['FID', 'IID'], axis = 1) 
             patEuDist['FID_case'].append(FID); patEuDist['IID_case'].append(IID)
             patEuDist['FID_control'].append(FID_ctrl); patEuDist['IID_control'].append(IID_ctrl)
-            patEuDist['dist'].append(euclidean(PC_case[['PC1','PC2']], PC_ctrl[['PC1','PC2']]))
+            patEuDist['dist'].append(
+                euclidean(
+                    np.array(PC_case[['PC1','PC2']].iloc[0]),
+                    np.array(PC_ctrl[['PC1','PC2']].iloc[0])
+                )
+            )
 
         # Sort DataFrame
         patEuDist = pd.DataFrame(patEuDist)
@@ -272,7 +277,7 @@ def patientMatching(settings):
         matched_controls_all.append([sample_id_case] + pat_matched_controls)
         
         # Get #ratio# of matched controls and append to DataFrame
-        matched_controls = matched_controls.append(patEuDist[['FID_control','IID_control']][0:ratio])
+        matched_controls = matched_controls._append(patEuDist[['FID_control','IID_control']][0:ratio])
 
     # Drop duplicated and append pheno
     matched_controls = matched_controls.drop_duplicates(subset = ["FID_control", "IID_control"])
@@ -281,7 +286,7 @@ def patientMatching(settings):
     # Create patient list
     patList = matched_controls
     patList.columns = ['FID', 'IID', 'pheno']
-    patList = patList.append(cases)
+    patList = patList._append(cases)
         
     # Write patient list to csv file 
     patList.to_csv(settings['file']['pheno_matched'], sep = ' ', header = None, index = False)

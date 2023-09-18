@@ -5,3 +5,5 @@ Outputs/
 .vs
 *pca*
 Notes.txt
+env/
+*.png
