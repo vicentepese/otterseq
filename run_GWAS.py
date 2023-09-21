@@ -15,9 +15,8 @@ import subprocess
 import json
 import os
 from os.path import isfile, join
-from collections import defaultdict, OrderedDict
+from collections import defaultdict
 import matplotlib.pyplot as plt
-import scipy 
 from scipy.spatial.distance import euclidean 
 import seaborn as sns
 import pandas as pd
