@@ -28,6 +28,4 @@ NUMFILES=$(awk 'END{print NR}' $MERGELIST)
 --allow-no-sex \
 --memory 4626791360 \
 --make-bed \
---out ${GWAS}$PREFIX > ${GWAS}$PREFIX
-
-
+--out ${GWAS}$PREFIX
