@@ -4,6 +4,9 @@ Data/
 Outputs/
 reports/
 
+# macOS
+.DS_Store
+
 # Visual studio
 *.vscode/
 
