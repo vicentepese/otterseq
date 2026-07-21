@@ -30,7 +30,11 @@ class OtterQC:
 
     @beartype
     def ibd(
-        self, filename: str, threshold: float | int = 0.25
+        self,
+        filename: str,
+        pheno: str,
+        threshold: float | int = 0.25,
+        exclude_indvs: pd.DataFrame | None = None,
     ) -> pd.DataFrame:
         """Compute Identity By Descent (IBD) between individuals.
 
@@ -42,7 +46,10 @@ class OtterQC:
             filename (str): Path to the file with prefix (e.g. `data/toy`,
                 where the "data" folder contains a "toy.map", "toy.bed", and
                 "toy.bim" file).
+            pheno (str): Path to the phenotype file (FID IID pheno, space-separated).
             threshold (float | int): Threshold for IBD. Must be between 0 and 1.
+            exclude_indvs (pd.DataFrame | None, optional): FID/IID of individuals
+                to exclude before computing IBD. Defaults to None.
 
         Returns:
             pd.DataFrame: DataFrame with the FID and IID of individuals that
@@ -60,15 +67,29 @@ class OtterQC:
             if not os.path.isfile(filename + suf):
                 raise FileNotFoundError(f"{filename}{suf} not found")
 
+        remove_path = None
+        if exclude_indvs is not None:
+            remove_path = filename + ".ibd_remove.tsv"
+            exclude_indvs.to_csv(
+                remove_path, sep="\t", header=False, index=False
+            )
+
         command = [
             "bash",
             self._IBD_SCRIPT,
             "--bfile",
             filename,
+            "--pheno",
+            pheno,
             "--threshold",
             str(threshold),
         ]
+        if remove_path is not None:
+            command.extend(["--remove", remove_path])
         subprocess.run(command, check=False)  # noqa: S603
+
+        if remove_path is not None:
+            os.remove(remove_path)
 
         # Return filtered out patients
         indv_out = pd.read_csv(
@@ -129,8 +150,12 @@ class OtterQC:
             command, capture_output=True, text=True, check=False
         )
 
+        dupvar_path = basename + ".dupvar"
+        if not os.path.isfile(dupvar_path):
+            return []
+
         dup_vars_df = pd.read_csv(
-            basename + ".dupvar",
+            dupvar_path,
             usecols=[3],
             names=["rsid"],
             sep="\t",
@@ -185,9 +210,11 @@ class OtterQC:
             command, capture_output=True, text=True, check=False
         )
 
-        dup_rsid_df = pd.read_csv(
-            basename + ".rmdup.mismatch", usecols=[0], names=["rsid"]
-        )
+        rmdup_path = basename + ".rmdup.mismatch"
+        if not os.path.isfile(rmdup_path):
+            return []
+
+        dup_rsid_df = pd.read_csv(rmdup_path, usecols=[0], names=["rsid"])
         dup_rsid: list[str] = dup_rsid_df.rsid.to_list()
         return dup_rsid
 
@@ -218,6 +245,7 @@ class OtterQC:
     def qc(  # noqa: C901
         self,
         filename: str,
+        pheno: str,
         outpath: str | None = None,
         exclude_vars: list[str] | None = None,
         exclude_indvs: pd.DataFrame | None = None,
@@ -235,6 +263,7 @@ class OtterQC:
             filename (str): Path to the file with prefix (e.g. `data/toy`,
                 where the "data" folder contains a "toy.map", "toy.bed", and
                 "toy.bim" file).
+            pheno (str): Path to the phenotype file (FID IID pheno, space-separated).
             outpath (str | None): Path to the directory where the output should
                 be written. If None, uses `filename`.
             exclude_vars (list[str] | None): List of variants to exclude.
@@ -281,6 +310,8 @@ class OtterQC:
             filename,
             "--outpath",
             outpath,
+            "--pheno",
+            pheno,
         ]
 
         # Add optional arguments

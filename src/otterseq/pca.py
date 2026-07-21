@@ -12,6 +12,7 @@ import subprocess
 from typing import ClassVar, Literal
 
 import numpy as np
+import pandas as pd
 import plotly.express as px
 import plotly.graph_objects as go
 import polars as pl
@@ -34,19 +35,24 @@ class OtterPCA:
     def pca(
         self,
         filepath: str,
+        pheno: str,
         outpath: str | None = None,
         exclude_hla: bool = True,
         n_pcs: int = 20,
+        exclude_indvs: pd.DataFrame | None = None,
     ) -> None:
         """Compute Principal Component Analysis (PCA) on a PLINK binary file.
 
         Args:
             filepath (str): Path to the binary file, without suffix (e.g. data/toy)
+            pheno (str): Path to the phenotype file (FID IID pheno, space-separated).
             outpath (str | None, optional): Path to the output file. If None,
                 is the same as `filepath`. Defaults to None.
             exclude_hla (bool, optional): True to exclude HLA region from the PCA.
                 Defaults to True.
             n_pcs (int, optional): Number of Principal Components. Defaults to 20.
+            exclude_indvs (pd.DataFrame | None, optional): FID/IID of individuals
+                to exclude from the PCA. Defaults to None.
 
         Raises:
             FileNotFoundError: If any of the PLINK binary files are missing.
@@ -62,11 +68,20 @@ class OtterPCA:
 
         outpath = outpath or filepath
 
+        remove_path = None
+        if exclude_indvs is not None:
+            remove_path = filepath + ".pca_remove.tsv"
+            exclude_indvs.to_csv(
+                remove_path, sep="\t", header=False, index=False
+            )
+
         command = [
             "bash",
             self._PCA_SCRIPT,
             "--bfile",
             filepath,
+            "--pheno",
+            pheno,
             "--outpath",
             outpath,
             "--exclude-hla",
@@ -74,9 +89,13 @@ class OtterPCA:
             "--pcs",
             str(n_pcs),
         ]
+        if remove_path is not None:
+            command.extend(["--remove", remove_path])
         subprocess.run(  # noqa: S603
             command, text=True, capture_output=True, check=False
         )
+        if remove_path is not None:
+            os.remove(remove_path)
 
     @beartype
     def plot_pca(self, filename: str, plot: bool = True) -> go.Figure:

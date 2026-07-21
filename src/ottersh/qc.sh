@@ -41,6 +41,11 @@ while [[ $# -gt 0 ]]; do
         shift # past argument
         shift # past value
         ;;
+        --pheno)
+        pheno="$2"
+        shift # past argument
+        shift # past value
+        ;;
         *)    # unknown option
         echo "Unknown option $key"
         exit 1
@@ -54,6 +59,7 @@ outfile="${outpath}/${basename}"
 
 # shellcheck disable=SC2046
 bin/plink --bfile "${bfile}" \
+      --pheno "${pheno}" \
       $([ -n "${geno_miss}" ] && echo "--geno ${geno_miss}") \
       $([ -n "${indv_miss}" ] && echo "--mind ${indv_miss}") \
       $([ -n "${maf}" ] && echo "--maf ${maf}") \

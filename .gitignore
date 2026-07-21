@@ -35,3 +35,6 @@ plink2
 # Pytest
 pytest.xml
 *coverage*
+
+# PLINK binaries (install locally)
+bin/

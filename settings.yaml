@@ -30,7 +30,7 @@ file:
   matched_controls: "Resources/matched_controls.csv"
 
 plinkFiles:
-  prefix: "CASPR2_GWAS"
+  prefix: "CASPR2_GWAS_IMPUTED"
   GWAS: "Data/GWAS_binaries/"
   GWASQC: "Data/"
   PCA: "Resources/PCA"
@@ -44,7 +44,7 @@ sh_script:
   logistic_regression.sh: "sh_scripts/logistic_regression.sh"
 
 IBD_threshold: 0.2
-phenomiss: 0.15
+phenomiss: null  # disabled: imputed data has ~25% missingness by design
 genomiss: 0.1
 maf: 0.05
 ControlCaseRatio: 10
