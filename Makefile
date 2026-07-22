@@ -1,4 +1,4 @@
-PLINK2_LINUX_URL = https://s3.amazonaws.com/plink2-assets/plink2_linux_x86_64_20250627.zip
+PLINK2_LINUX_URL = https://s3.amazonaws.com/plink2-assets/alpha6/plink2_linux_x86_64_20250627.zip
 PLINK2_DARWIN_URL = https://s3.amazonaws.com/plink2-assets/alpha6/plink2_mac_arm64_20250627.zip
 PLINK1_LINUX_URL = https://s3.amazonaws.com/plink1-assets/plink_linux_x86_64_20240818.zip
 PLINK1_DARWIN_URL = https://s3.amazonaws.com/plink1-assets/plink_mac_20201019.zip

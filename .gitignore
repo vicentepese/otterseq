@@ -4,6 +4,9 @@ Data/
 Outputs/
 reports/
 
+# macOS
+.DS_Store
+
 # Visual studio
 *.vscode/
 
@@ -35,3 +38,6 @@ plink2
 # Pytest
 pytest.xml
 *coverage*
+
+# PLINK binaries (install locally)
+bin/

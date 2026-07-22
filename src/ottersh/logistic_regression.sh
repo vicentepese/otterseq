@@ -38,6 +38,7 @@ bin/plink --bfile "${bfile}" \
       --pheno "${pheno}" \
       --covar "${covar}" \
       --logistic \
+      --hide-covar \
       --allow-no-sex \
       --out "${outpath}"
 

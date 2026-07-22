@@ -1,8 +1,10 @@
 """Unit test for `OtterPCA`."""
 
+import os
 from typing import Any
 from unittest.mock import patch
 
+import pandas as pd
 import plotly.graph_objects as go
 import polars as pl
 import pytest
@@ -63,6 +65,33 @@ def test_pca(
         assert call_args[0] == "bash"
         assert "--pcs" in call_args
         assert str(n_pcs) in call_args
+
+
+def test_pca_with_pheno_and_exclude_indvs(
+    otter_pca: OtterPCA, filename: str
+) -> None:
+    """Test that `pca` forwards --pheno and --remove and cleans up temp file."""
+    exclude_indvs = pd.DataFrame({"FID": ["FAM001"], "IID": ["1"]})
+    with patch("subprocess.run") as mock_subprocess:
+        mock_subprocess.return_value.returncode = 0
+
+        otter_pca.pca(
+            filepath=filename,
+            pheno="tests/data_pca/toy.pheno.tsv",
+            exclude_hla=False,
+            exclude_indvs=exclude_indvs,
+        )
+
+        call_args = mock_subprocess.call_args[0][0]
+        assert "--pheno" in call_args
+        assert (
+            call_args[call_args.index("--pheno") + 1]
+            == "tests/data_pca/toy.pheno.tsv"
+        )
+        assert "--remove" in call_args
+
+    # The temporary remove file should be cleaned up after the call
+    assert not os.path.isfile(filename + ".pca_remove.tsv")
 
 
 def test_pca_plot(otter_pca: OtterPCA, filename_pca: str) -> None:

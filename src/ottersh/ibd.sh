@@ -15,6 +15,16 @@ while [[ $# -gt 0 ]]; do
         shift # past argument
         shift # past value
         ;;
+        --pheno)
+        pheno="$2"
+        shift # past argument
+        shift # past value
+        ;;
+        --remove)
+        remove="$2"
+        shift # past argument
+        shift # past value
+        ;;
         *)    # unknown option
         echo "Unknown option $key"
         exit 1
@@ -23,5 +33,5 @@ while [[ $# -gt 0 ]]; do
 done
 
 # Compute IBD
-bin/plink2 --bfile "$bfile" --make-king-table --out "$bfile"
-bin/plink2  --bfile "$bfile" --king-cutoff-table "$bfile".kin0 "$threshold" --out "$bfile"
+bin/plink2 --bfile "$bfile" ${pheno:+--pheno "$pheno"} ${remove:+--remove "$remove"} --make-king-table --out "$bfile"
+bin/plink2 --bfile "$bfile" --king-cutoff-table "$bfile".kin0 "$threshold" --out "$bfile"

@@ -1,5 +1,9 @@
 # Import libraries
-library(jsonlite)
+packages <- c("yaml", "tidyverse", "readr", "data.table", "ggrepel", "viridis", "hrbrthemes")
+missing <- packages[!packages %in% installed.packages()[, "Package"]]
+if (length(missing)) install.packages(missing, repos = "https://cloud.r-project.org")
+
+library(yaml)
 library(tidyverse)
 library(readr)
 library(data.table)
@@ -9,10 +13,10 @@ library(hrbrthemes)
 
 ########## IMPORT ##########
 # Import settings
-settings <- jsonlite::fromJSON('settings.json')
+settings <- yaml::read_yaml('settings.yaml')
 
-# Import association file 
-assoc.data <- read.table(paste0(settings$directory$GWAS_out,settings$plinkFiles$prefix ,".assoc.logistic"), header = TRUE, sep = '')
+# Import association file
+assoc.data <- read.table(paste0(settings$plinkFiles$GWASQC, settings$plinkFiles$prefix, ".assoc.logistic"), header = TRUE, sep = '')
 assoc.data <- assoc.data[which(assoc.data$TEST == 'ADD'),]
 
 ######### PLOT ###########
