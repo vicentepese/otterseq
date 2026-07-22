@@ -33,5 +33,5 @@ while [[ $# -gt 0 ]]; do
 done
 
 # Compute IBD
-bin/plink2 --bfile "$bfile" --pheno "$pheno" ${remove:+--remove "$remove"} --make-king-table --out "$bfile"
+bin/plink2 --bfile "$bfile" ${pheno:+--pheno "$pheno"} ${remove:+--remove "$remove"} --make-king-table --out "$bfile"
 bin/plink2 --bfile "$bfile" --king-cutoff-table "$bfile".kin0 "$threshold" --out "$bfile"

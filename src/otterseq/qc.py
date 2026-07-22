@@ -32,8 +32,8 @@ class OtterQC:
     def ibd(
         self,
         filename: str,
-        pheno: str,
         threshold: float | int = 0.25,
+        pheno: str | None = None,
         exclude_indvs: pd.DataFrame | None = None,
     ) -> pd.DataFrame:
         """Compute Identity By Descent (IBD) between individuals.
@@ -46,8 +46,9 @@ class OtterQC:
             filename (str): Path to the file with prefix (e.g. `data/toy`,
                 where the "data" folder contains a "toy.map", "toy.bed", and
                 "toy.bim" file).
-            pheno (str): Path to the phenotype file (FID IID pheno, space-separated).
             threshold (float | int): Threshold for IBD. Must be between 0 and 1.
+            pheno (str | None, optional): Path to the phenotype file (FID IID
+                pheno, space-separated). Defaults to None.
             exclude_indvs (pd.DataFrame | None, optional): FID/IID of individuals
                 to exclude before computing IBD. Defaults to None.
 
@@ -79,11 +80,11 @@ class OtterQC:
             self._IBD_SCRIPT,
             "--bfile",
             filename,
-            "--pheno",
-            pheno,
             "--threshold",
             str(threshold),
         ]
+        if pheno is not None:
+            command.extend(["--pheno", pheno])
         if remove_path is not None:
             command.extend(["--remove", remove_path])
         subprocess.run(command, check=False)  # noqa: S603
@@ -245,7 +246,7 @@ class OtterQC:
     def qc(  # noqa: C901
         self,
         filename: str,
-        pheno: str,
+        pheno: str | None = None,
         outpath: str | None = None,
         exclude_vars: list[str] | None = None,
         exclude_indvs: pd.DataFrame | None = None,
@@ -263,7 +264,8 @@ class OtterQC:
             filename (str): Path to the file with prefix (e.g. `data/toy`,
                 where the "data" folder contains a "toy.map", "toy.bed", and
                 "toy.bim" file).
-            pheno (str): Path to the phenotype file (FID IID pheno, space-separated).
+            pheno (str | None, optional): Path to the phenotype file (FID IID
+                pheno, space-separated). Defaults to None.
             outpath (str | None): Path to the directory where the output should
                 be written. If None, uses `filename`.
             exclude_vars (list[str] | None): List of variants to exclude.
@@ -310,9 +312,9 @@ class OtterQC:
             filename,
             "--outpath",
             outpath,
-            "--pheno",
-            pheno,
         ]
+        if pheno is not None:
+            command.extend(["--pheno", pheno])
 
         # Add optional arguments
         optional_args = [

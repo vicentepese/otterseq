@@ -59,7 +59,7 @@ outfile="${outpath}/${basename}"
 
 # shellcheck disable=SC2046
 bin/plink --bfile "${bfile}" \
-      --pheno "${pheno}" \
+      $([ -n "${pheno}" ] && echo "--pheno ${pheno}") \
       $([ -n "${geno_miss}" ] && echo "--geno ${geno_miss}") \
       $([ -n "${indv_miss}" ] && echo "--mind ${indv_miss}") \
       $([ -n "${maf}" ] && echo "--maf ${maf}") \

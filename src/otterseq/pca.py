@@ -35,7 +35,7 @@ class OtterPCA:
     def pca(
         self,
         filepath: str,
-        pheno: str,
+        pheno: str | None = None,
         outpath: str | None = None,
         exclude_hla: bool = True,
         n_pcs: int = 20,
@@ -45,7 +45,8 @@ class OtterPCA:
 
         Args:
             filepath (str): Path to the binary file, without suffix (e.g. data/toy)
-            pheno (str): Path to the phenotype file (FID IID pheno, space-separated).
+            pheno (str | None, optional): Path to the phenotype file (FID IID
+                pheno, space-separated). Defaults to None.
             outpath (str | None, optional): Path to the output file. If None,
                 is the same as `filepath`. Defaults to None.
             exclude_hla (bool, optional): True to exclude HLA region from the PCA.
@@ -80,8 +81,6 @@ class OtterPCA:
             self._PCA_SCRIPT,
             "--bfile",
             filepath,
-            "--pheno",
-            pheno,
             "--outpath",
             outpath,
             "--exclude-hla",
@@ -89,6 +88,8 @@ class OtterPCA:
             "--pcs",
             str(n_pcs),
         ]
+        if pheno is not None:
+            command.extend(["--pheno", pheno])
         if remove_path is not None:
             command.extend(["--remove", remove_path])
         subprocess.run(  # noqa: S603

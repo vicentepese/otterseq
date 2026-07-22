@@ -114,6 +114,26 @@ def test_qc_command_building_minimal() -> None:
             assert "--rm-indv" not in command
 
 
+def test_qc_command_building_with_pheno() -> None:
+    """Test that qc forwards the --pheno argument when provided."""
+    qc = OtterQC()
+
+    with tempfile.TemporaryDirectory() as temp_dir:
+        # Create test files
+        test_file = os.path.join(temp_dir, "test")
+        for suffix in [".bed", ".bim", ".fam"]:
+            with open(test_file + suffix, "w") as f:
+                f.write("test")
+
+        with patch("subprocess.run") as mock_run:
+            qc.qc(filename=test_file, pheno="pheno.txt", outpath=temp_dir)
+
+            command = mock_run.call_args[0][0]
+
+            assert "--pheno" in command
+            assert command[command.index("--pheno") + 1] == "pheno.txt"
+
+
 def test_qc_command_building_partial() -> None:
     """Test command building with some optional arguments."""
     qc = OtterQC()
@@ -191,6 +211,39 @@ def test_ibd(
     os.remove(cut_out_file)
 
 
+def test_ibd_with_pheno_and_exclude_indvs() -> None:
+    """Test that `ibd` forwards --pheno and --remove and cleans up temp file."""
+    qc = OtterQC()
+
+    with tempfile.TemporaryDirectory() as temp_dir:
+        # Create test files
+        test_file = os.path.join(temp_dir, "test")
+        for suffix in [".bed", ".bim", ".fam"]:
+            with open(test_file + suffix, "w") as f:
+                f.write("test")
+        # ibd reads the KING cutoff output produced by PLINK
+        with open(test_file + ".king.cutoff.out.id", "w") as f:
+            f.write("FID\tIID\n")
+
+        exclude_indvs = pd.DataFrame({"FID": ["FAM001"], "IID": ["1"]})
+        with patch("subprocess.run") as mock_run:
+            qc.ibd(
+                filename=test_file,
+                pheno="pheno.txt",
+                threshold=0.2,
+                exclude_indvs=exclude_indvs,
+            )
+
+            command = mock_run.call_args[0][0]
+
+            assert "--pheno" in command
+            assert command[command.index("--pheno") + 1] == "pheno.txt"
+            assert "--remove" in command
+
+        # The temporary remove file should be cleaned up after the call
+        assert not os.path.isfile(test_file + ".ibd_remove.tsv")
+
+
 @pytest.mark.parametrize(
     argnames=("filename", "error"),
     argvalues=[
@@ -222,6 +275,20 @@ def test_duplicate_vars(
 
     os.remove(path_dup_list)
     os.remove(basename + ".log")
+
+
+def test_duplicate_vars_no_output() -> None:
+    """Return an empty list when PLINK produces no .dupvar file."""
+    qc = OtterQC()
+
+    with tempfile.TemporaryDirectory() as temp_dir:
+        test_file = os.path.join(temp_dir, "test.bim")
+        with open(test_file, "w") as f:
+            f.write("test")
+
+        # Mock subprocess so no .dupvar file is created
+        with patch("subprocess.run"):
+            assert qc.get_duplicate_vars(test_file) == []
 
 
 @pytest.mark.parametrize(
@@ -258,6 +325,44 @@ def test_duplicate_rsid(
     os.remove(path_dup_list)
     os.remove(path_rm_dup_list)
     os.remove(path_log)
+
+
+def test_duplicate_rsid_no_output() -> None:
+    """Return an empty list when PLINK produces no .rmdup.mismatch file."""
+    qc = OtterQC()
+
+    with tempfile.TemporaryDirectory() as temp_dir:
+        test_file = os.path.join(temp_dir, "test.bim")
+        with open(test_file, "w") as f:
+            f.write("test")
+
+        # Mock subprocess so no .rmdup.mismatch file is created
+        with patch("subprocess.run"):
+            assert qc.get_duplicate_rsids(test_file) == []
+
+
+def test_extract_duplicate_individuals_not_found() -> None:
+    """Raise FileNotFoundError when the .fam file is missing."""
+    qc = OtterQC()
+    with pytest.raises(FileNotFoundError):
+        qc.extract_duplicate_individuals("tests/data/no_file.fam")
+
+
+def test_extract_duplicate_individuals() -> None:
+    """Return duplicated FID/IID rows from a .fam file."""
+    qc = OtterQC()
+
+    with tempfile.TemporaryDirectory() as temp_dir:
+        fam_file = os.path.join(temp_dir, "test.fam")
+        with open(fam_file, "w") as f:
+            f.write("FAM1 1 0 0 1 1\n")
+            f.write("FAM1 1 0 0 1 1\n")  # duplicate of the previous row
+            f.write("FAM2 2 0 0 1 1\n")
+
+        dup = qc.extract_duplicate_individuals(fam_file)
+
+        assert len(dup) == 1
+        assert dup.iloc[0]["FID"] == "FAM1"
 
 
 @pytest.mark.parametrize(

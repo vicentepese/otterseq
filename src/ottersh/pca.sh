@@ -47,14 +47,14 @@ done
 echo "${exclude_hla}"
 
 if [ "${exclude_hla}" == "False" ]; then
-    bin/plink --bfile "${bfile}" --pheno "${pheno}" ${remove:+--remove "$remove"} --allow-no-sex --pca "${pcs}" --out "${outpath}"
+    bin/plink --bfile "${bfile}" ${pheno:+--pheno "$pheno"} ${remove:+--remove "$remove"} --allow-no-sex --pca "${pcs}" --out "${outpath}"
 else
     bin/plink --bfile "${bfile}" --allow-no-sex --chr 6 --from-bp 28477797 \
         --to-bp 33448354 --make-bed --out temp --silent
     awk '{print $2}' temp.bim > exclude.txt
     rm -r temp*
     bin/plink --bfile "${bfile}" \
-        --pheno "${pheno}" \
+        ${pheno:+--pheno "$pheno"} \
         ${remove:+--remove "$remove"} \
         --allow-no-sex \
         --exclude exclude.txt \
